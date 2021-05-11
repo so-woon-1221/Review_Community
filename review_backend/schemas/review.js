@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
+const {
+  Types: { ObjectId },
+} = Schema;
 const reviewSchema = new Schema({
   title: {
     type: String,
@@ -11,8 +14,9 @@ const reviewSchema = new Schema({
     required: true,
   },
   author: {
-    type: String,
-    required: false,
+    type: ObjectId,
+    required: true,
+    ref: 'User',
   },
   content: {
     type: String,
@@ -22,6 +26,10 @@ const reviewSchema = new Schema({
   category: {
     type: String,
     required: true,
+  },
+  recommend: {
+    type: Number,
+    default: 0,
   },
   createdAt: {
     type: Date,
