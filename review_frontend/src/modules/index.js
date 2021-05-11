@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import loading from './loading';
-import post, { postSaga } from './post';
+import review, { reviewSaga } from './review';
 import { all } from 'redux-saga/effects';
 
-const rootReducer = combineReducers({ post, loading });
+const rootReducer = combineReducers({ review, loading });
 export function* rootSaga() {
-  yield all([postSaga()]);
+  yield all([reviewSaga()]);
 }
 
 export default rootReducer;

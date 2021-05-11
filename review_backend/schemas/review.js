@@ -15,7 +15,6 @@ const reviewSchema = new Schema({
   },
   author: {
     type: ObjectId,
-    required: true,
     ref: 'User',
   },
   content: {

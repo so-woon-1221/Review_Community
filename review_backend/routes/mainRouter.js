@@ -1,16 +1,73 @@
 const express = require('express');
-const Post = require('../schemas/post');
+const Review = require('../schemas/review');
 
 const router = express.Router();
 
-router.post('/post', async (req, res, next) => {
+router.post('/review', async (req, res, next) => {
   try {
-    const post = await Post.create({
+    const review = await Review.create({
       title: req.body.title,
-      // title: 'gg',
+      subtitle: req.body.subtitle,
+      content: req.body.content,
+      thumbnail: req.body.thumbnail,
+      category: req.body.category,
+      // author: req.user.id
     });
-    res.send(post);
-    // console.log(req.body);
+    res.send(review);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+// const paging = (page, totalPost) => {
+//   const maxPost = 10;
+//   let currentPage = page ? parseInt(page) : 1;
+//   const hidePost = page === 1 ? 0 : (page - 1) * maxPost;
+//   const totalPage = Math.ceil(totalPost / maxPost);
+//
+//   if (currentPage > totalPage) {
+//     currentPage = totalPage;
+//   }
+//
+//   const startPage = 1;
+//   const endPage = totalPage;
+//
+//   return {
+//     startPage,
+//     endPage,
+//     hidePost,
+//     maxPost,
+//     totalPage,
+//     currentPage,
+//   };
+// };
+
+router.get('/reviews', async (req, res, next) => {
+  // const { page } = req.query;
+  // try {
+  //   const totalPost = await Review.countDocuments({});
+  //   const {
+  //     startPage,
+  //     endPage,
+  //     hidePost,
+  //     maxPost,
+  //     totalPage,
+  //     currentPage,
+  //   } = paging(page, totalPost);
+  //   const reviews = await Review.find({})
+  //     .sort({ recommend: -1 })
+  //     .skip(hidePost)
+  //     .limit(maxPost);
+  //   res.send(reviews);
+  // } catch (e) {
+  //   console.error(e);
+  //   next(e);
+  // }
+
+  try {
+    const reviews = await Review.find({}).sort({ recommend: -1 });
+    res.send(reviews);
   } catch (e) {
     console.error(e);
     next(e);
