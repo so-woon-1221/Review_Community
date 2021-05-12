@@ -1,12 +1,12 @@
 import React from 'react';
-import Header from '../components/Header';
+import HeaderContainer from '../containers/HeaderContainer';
 import ReviewInsertContainer from '../containers/ReviewInsertContainer';
 
 const ReviewInsertPage = () => {
   return (
     <div>
-      <Header/>
-      <ReviewInsertContainer/>
+      <HeaderContainer />
+      <ReviewInsertContainer />
     </div>
   );
 };

@@ -13,7 +13,7 @@ exports.isLoggedIn = (req, res, next) => {
         next();
       }
     } catch (e) {
-      res.status(403).send('로그인 정보 없음');
+      res.send({ message: '로그인 에러' });
     }
   }
 };

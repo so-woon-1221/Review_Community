@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from '../components/Header';
+import HeaderContainer from '../containers/HeaderContainer';
 import ReviewListContainer from '../containers/ReviewListContainer';
 
 const ReviewListPage = () => {
   return (
     <div>
-      <Header />
+      <HeaderContainer />
       <ReviewListContainer />
     </div>
   );

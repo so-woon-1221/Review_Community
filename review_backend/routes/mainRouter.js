@@ -1,9 +1,10 @@
 const express = require('express');
 const Review = require('../schemas/review');
+const { isLoggedIn, isNotLoggedIn } = require('./jwtMiddleware');
 
 const router = express.Router();
 
-router.post('/review', async (req, res, next) => {
+router.post('/review', isLoggedIn, async (req, res, next) => {
   try {
     const review = await Review.create({
       title: req.body.title,
@@ -67,6 +68,7 @@ router.get('/reviews', async (req, res, next) => {
 
   try {
     const reviews = await Review.find({}).sort({ recommend: -1 });
+    console.log(reviews);
     res.send(reviews);
   } catch (e) {
     console.error(e);

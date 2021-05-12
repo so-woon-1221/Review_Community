@@ -13,6 +13,7 @@ const HeaderBlock = styled.div`
   padding: 0 15%;
 
   @media screen and (max-width: 768px) {
+    padding: 0 5%;
     display: block;
   }
 `;
@@ -45,7 +46,7 @@ const HeaderLink = styled(Link)`
   }
 `;
 
-const Header = () => {
+const Header = ({ user }) => {
   return (
     <HeaderBlock>
       <HeaderLogo>
@@ -63,6 +64,15 @@ const Header = () => {
         <HeaderLink to={'/board'}>
           <h3>Q&A</h3>
         </HeaderLink>
+        {user === '' ? (
+          <HeaderLink to={'/login'}>
+            <h3>Login</h3>
+          </HeaderLink>
+        ) : (
+          <HeaderLink>
+            <h3>Logout</h3>
+          </HeaderLink>
+        )}
       </HeaderContent>
     </HeaderBlock>
   );

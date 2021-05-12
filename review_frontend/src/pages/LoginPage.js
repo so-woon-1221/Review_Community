@@ -1,14 +1,14 @@
 import React from 'react';
 import HeaderContainer from '../containers/HeaderContainer';
-import HotReviewContainer from '../containers/HotReviewContainer';
+import LoginContainer from '../containers/LoginContainer';
 
-const IndexPage = () => {
+const LoginPage = () => {
   return (
     <div>
       <HeaderContainer />
-      <HotReviewContainer />
+      <LoginContainer />
     </div>
   );
 };
 
-export default IndexPage;
+export default LoginPage;
