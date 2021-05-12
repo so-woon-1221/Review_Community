@@ -18,12 +18,13 @@ dotenv.config();
 //     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 //     password: process.env.REDIS_PASSWORD,
 // });
-// const passportConfig = require('./passport');
+const passportConfig = require('./passport');
 
 const mainRouter = require('./routes/mainRouter');
+const authRouter = require('./routes/authRouter');
 
 const app = express();
-// passportConfig();
+passportConfig();
 app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'njk');
 nunjucks.configure('views', {
@@ -57,6 +58,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', mainRouter);
+app.use('/auth', authRouter);
 // app.use(favicon(path.join(__dirname, 'public', 'icon.ico')));
 
 connect();
