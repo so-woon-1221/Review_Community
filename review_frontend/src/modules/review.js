@@ -3,12 +3,15 @@ import createRequestSaga from '../lib/createRequestSaga';
 import axios from 'axios';
 import { takeLatest } from 'redux-saga/effects';
 
+const INITIALIZE = 'review/INITIALIZE';
 const CHANGE_FIELD = 'review/CHANGE_FIELD';
 const INSERT = 'review/INSERT';
 const INSERT_SUCCESS = 'review/INSERT_SUCCESS';
+const INSERT_FAILURE = 'review/INSERT_FAILURE';
 // const GET = 'review/GET';
 // const GET_SUCCESS = 'review/GET_REVIEWS';
 
+export const initialize = createAction(INITIALIZE);
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
   value,
@@ -39,6 +42,7 @@ const initialState = {
   thumbnail: '',
   category: '',
   review: '',
+  error: '',
   // reviews: null,
 };
 
@@ -56,14 +60,11 @@ const review = handleActions(
       ...state,
       review,
     }),
-    // [GET]: (state) => ({
-    //   ...state,
-    //   reviews: null,
-    // }),
-    // [GET_SUCCESS]: (state, action) => ({
-    //   ...state,
-    //   reviews: action,
-    // }),
+    [INSERT_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
+    }),
+    [INITIALIZE]: (state) => initialState,
   },
   initialState,
 );

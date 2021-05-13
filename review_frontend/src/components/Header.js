@@ -11,6 +11,7 @@ const HeaderBlock = styled.div`
   top: 0;
   left: 0;
   padding: 0 15%;
+  z-index: 9999;
 
   @media screen and (max-width: 768px) {
     padding: 0 5%;

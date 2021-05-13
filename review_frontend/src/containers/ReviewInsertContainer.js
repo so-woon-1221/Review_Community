@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import ReviewInsert from '../components/ReviewInsert';
 import { useSelector, useDispatch } from 'react-redux';
-import { insert, changeField } from '../modules/review';
+import { insert, changeField, initialize } from '../modules/review';
 import { withRouter } from 'react-router-dom';
 
 const ReviewInsertContainer = ({ history }) => {
@@ -22,15 +22,36 @@ const ReviewInsertContainer = ({ history }) => {
     [dispatch],
   );
   const onInsert = () => {
+    let errorMessage = '';
+    if (title === '') {
+      errorMessage += '[제목] ';
+    }
+    if (subtitle === '') {
+      errorMessage += '[부제목] ';
+    }
+    if (content === '') {
+      errorMessage += '[본문] ';
+    }
+    if (thumbnail === '') {
+      errorMessage += '[썸네일] ';
+    }
+    if (category === '') {
+      errorMessage += '[카테고리] ';
+    }
+    if (errorMessage !== '') {
+      alert(`${errorMessage} 빈칸입니다. `);
+      return;
+    }
     dispatch(insert({ title, subtitle, content, thumbnail, category }));
   };
 
   useEffect(() => {
     if (review.title === title && title !== '') {
       alert('등록되었습니다.');
+      dispatch(initialize());
       history.push('/');
     }
-    if (review.message != null) {
+    if (review.message) {
       alert(review.message);
     }
   }, [history, review]);
