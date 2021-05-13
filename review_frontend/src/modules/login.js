@@ -8,7 +8,10 @@ const INITIALIZE = 'login/INITIALIZE';
 const LOGIN = 'login/LOGIN';
 const LOGIN_SUCCESS = 'login/LOGIN_SUCCESS';
 const LOGIN_FAILURE = 'login/LOGIN_FAILURE';
+const LOGOUT = 'login/LOGOUT';
+const LOGOUT_SUCCESS = 'login/LOGOUT_SUCCESS';
 const TEMP_SET_USER = 'login/TEMP_SET_USER';
+const CLEAER_USER = 'login/CLEAR_USER';
 
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
@@ -19,14 +22,20 @@ export const loginUser = createAction(LOGIN, ({ email, password }) => ({
   email,
   password,
 }));
+export const logoutUser = createAction(LOGOUT);
 export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
+export const clearUser = createAction(CLEAER_USER);
 
 const loginUserApi = ({ email, password }) =>
   axios.post('/auth/login', { email, password });
 const loginUserSaga = createRequestSaga(LOGIN, loginUserApi);
 
+const logoutUserApi = () => axios.get('/auth/logout');
+const logoutUserSaga = createRequestSaga(LOGOUT, logoutUserApi);
+
 export function* loginSaga() {
   yield takeLatest(LOGIN, loginUserSaga);
+  yield takeLatest(LOGOUT, logoutUserSaga);
 }
 
 const initialState = {
@@ -55,7 +64,12 @@ const login = handleActions(
       ...state,
       error,
     }),
+    [LOGOUT_SUCCESS]: (state) => initialState,
     [TEMP_SET_USER]: (state, { payload: user }) => ({ ...state, user }),
+    [CLEAER_USER]: (state) => ({
+      ...state,
+      user: '',
+    }),
   },
   initialState,
 );

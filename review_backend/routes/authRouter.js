@@ -66,4 +66,9 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/logout', (req, res, next) => {
+  res.clearCookie('access_token');
+  res.send({ message: '로그아웃 되었습니다.' });
+});
+
 module.exports = router;

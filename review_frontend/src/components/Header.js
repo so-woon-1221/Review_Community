@@ -69,7 +69,7 @@ const Header = ({ user }) => {
             <h3>Login</h3>
           </HeaderLink>
         ) : (
-          <HeaderLink>
+          <HeaderLink to={'/logout'}>
             <h3>Logout</h3>
           </HeaderLink>
         )}
