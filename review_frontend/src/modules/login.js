@@ -8,6 +8,7 @@ const INITIALIZE = 'login/INITIALIZE';
 const LOGIN = 'login/LOGIN';
 const LOGIN_SUCCESS = 'login/LOGIN_SUCCESS';
 const LOGIN_FAILURE = 'login/LOGIN_FAILURE';
+const TEMP_SET_USER = 'login/TEMP_SET_USER';
 
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
@@ -18,6 +19,7 @@ export const loginUser = createAction(LOGIN, ({ email, password }) => ({
   email,
   password,
 }));
+export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
 
 const loginUserApi = ({ email, password }) =>
   axios.post('/auth/login', { email, password });
@@ -53,6 +55,7 @@ const login = handleActions(
       ...state,
       error,
     }),
+    [TEMP_SET_USER]: (state, { payload: user }) => ({ ...state, user }),
   },
   initialState,
 );

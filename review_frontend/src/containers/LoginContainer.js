@@ -26,6 +26,11 @@ const LoginContainer = ({ history }) => {
     if (user) {
       alert('로그인되었습니다.');
       history.push('/');
+      try {
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (e) {
+        console.log('localStorage is not working');
+      }
     }
     if (error != null) {
       alert(error);
