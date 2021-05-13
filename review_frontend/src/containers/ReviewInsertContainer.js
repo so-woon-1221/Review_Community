@@ -26,9 +26,12 @@ const ReviewInsertContainer = ({ history }) => {
   };
 
   useEffect(() => {
-    if (review) {
+    if (review.title === title && title !== '') {
       alert('등록되었습니다.');
       history.push('/');
+    }
+    if (review.message != null) {
+      alert(review.message);
     }
   }, [history, review]);
 

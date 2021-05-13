@@ -12,7 +12,7 @@ router.post('/review', isLoggedIn, async (req, res, next) => {
       content: req.body.content,
       thumbnail: req.body.thumbnail,
       category: req.body.category,
-      // author: req.user.id
+      author: req.body.user,
     });
     res.send(review);
   } catch (e) {

@@ -6,8 +6,8 @@ import { takeLatest } from 'redux-saga/effects';
 const CHANGE_FIELD = 'review/CHANGE_FIELD';
 const INSERT = 'review/INSERT';
 const INSERT_SUCCESS = 'review/INSERT_SUCCESS';
-const GET = 'review/GET';
-const GET_SUCCESS = 'review/GET_REVIEWS';
+// const GET = 'review/GET';
+// const GET_SUCCESS = 'review/GET_REVIEWS';
 
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
@@ -23,18 +23,13 @@ export const insert = createAction(
     category,
   }),
 );
-export const get = createAction(GET);
 
 const insertReview = ({ title, subtitle, content, thumbnail, category }) =>
   axios.post('/review', { title, subtitle, content, thumbnail, category });
 const insertSaga = createRequestSaga(INSERT, insertReview);
 
-const getReviews = () => axios.get('/reviews');
-const getSaga = createRequestSaga(GET, getReviews);
-
 export function* reviewSaga() {
   yield takeLatest(INSERT, insertSaga);
-  yield takeLatest(GET, getSaga);
 }
 
 const initialState = {
@@ -44,7 +39,7 @@ const initialState = {
   thumbnail: '',
   category: '',
   review: '',
-  reviews: null,
+  // reviews: null,
 };
 
 const review = handleActions(
@@ -61,14 +56,14 @@ const review = handleActions(
       ...state,
       review,
     }),
-    [GET]: (state) => ({
-      ...state,
-      reviews: null,
-    }),
-    [GET_SUCCESS]: (state, { payload: reviews }) => ({
-      ...state,
-      reviews,
-    }),
+    // [GET]: (state) => ({
+    //   ...state,
+    //   reviews: null,
+    // }),
+    // [GET_SUCCESS]: (state, action) => ({
+    //   ...state,
+    //   reviews: action,
+    // }),
   },
   initialState,
 );

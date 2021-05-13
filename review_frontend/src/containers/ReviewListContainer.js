@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
@@ -8,6 +10,10 @@ const ContentBlock = styled.div`
 
   h2 {
     margin: 0 0 10px;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 20px 5%;
   }
 `;
 
@@ -54,13 +60,32 @@ const CategoryList = styled.ul`
     float: left;
     display: block;
     padding-right: 10px;
+    flex: 1;
   }
   margin: 0;
   padding-bottom: 0;
 `;
 
-const ReviewListContainer = () => {
+const CategoryLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const WriteButton = styled(Link)`
+  //background: #171c26;
+  text-decoration: none;
+  //padding: 5px;
+  //color: #a7c0f2;
+`;
+
+const ReviewListContainer = ({ history }) => {
   const categories = ['all', 'tech', 'food', 'cafe'];
+  const { user } = useSelector(({ login }) => ({
+    user: login.user,
+  }));
 
   return (
     <ContentBlock>
@@ -70,8 +95,13 @@ const ReviewListContainer = () => {
           {categories.map((category) => (
             // onclick 이벤트 달아서 useEffect에 category state가 바뀌면 렌더링되도록
             // 기본 category staete는 all
-            <li>{category}</li>
+            <li>
+              <CategoryLink to={`/reviews?category=${category}`}>
+                {category}
+              </CategoryLink>
+            </li>
           ))}
+          {user !== '' ? <WriteButton to={'/review'}>글쓰기</WriteButton> : ''}
         </CategoryList>
       </CategoryWrapper>
       <ContentWrapper>

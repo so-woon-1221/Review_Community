@@ -30,7 +30,7 @@ const LoginContainer = ({ history }) => {
     }
     if (user) {
       alert('로그인되었습니다.');
-      history.push('/');
+      history.goBack();
       try {
         localStorage.setItem('user', JSON.stringify(user));
       } catch (e) {
@@ -40,7 +40,7 @@ const LoginContainer = ({ history }) => {
     if (error != null) {
       alert(error);
     }
-  }, [history, user, error]);
+  }, [history, user, error, dispatch]);
 
   return (
     <Login

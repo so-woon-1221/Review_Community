@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const LoginBlock = styled.div`
   padding: 20px 15%;
@@ -38,6 +39,8 @@ const Login = ({ email, password, onChangeField, onSubmit }) => {
           onChange={onChangePassword}
         />
         <button onClick={onSubmit}>로그인</button>
+        <br />
+        <Link to={'/register'}>회원가입</Link>
       </LoginWrapper>
     </LoginBlock>
   );
