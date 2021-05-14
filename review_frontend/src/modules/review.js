@@ -27,6 +27,7 @@ export const insert = createAction(
     author,
   }),
 );
+// export const get = createAction(GET, ({ id }) => ({ id }));
 
 const insertReview = ({
   title,
@@ -45,6 +46,8 @@ const insertReview = ({
     author,
   });
 const insertSaga = createRequestSaga(INSERT, insertReview);
+
+// const getReview = ({ id }) => axios.get('/reviews/');
 
 export function* reviewSaga() {
   yield takeLatest(INSERT, insertSaga);

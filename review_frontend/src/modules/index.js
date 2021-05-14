@@ -5,7 +5,12 @@ import login, { loginSaga } from './login';
 import register, { registerSaga } from './register';
 import { all } from 'redux-saga/effects';
 
-const rootReducer = combineReducers({ review, loading, login, register });
+const rootReducer = combineReducers({
+  review,
+  loading,
+  login,
+  register,
+});
 export function* rootSaga() {
   yield all([reviewSaga(), loginSaga(), registerSaga()]);
 }

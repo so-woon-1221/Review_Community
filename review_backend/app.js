@@ -22,6 +22,7 @@ const passportConfig = require('./passport');
 
 const mainRouter = require('./routes/mainRouter');
 const authRouter = require('./routes/authRouter');
+const reviewsRouter = require('./routes/reviewsRouter');
 
 const app = express();
 passportConfig();
@@ -59,6 +60,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', mainRouter);
 app.use('/auth', authRouter);
+app.use('/reviews', reviewsRouter);
 // app.use(favicon(path.join(__dirname, 'public', 'icon.ico')));
 
 connect();

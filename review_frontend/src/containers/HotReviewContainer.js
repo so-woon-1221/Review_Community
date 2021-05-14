@@ -24,7 +24,9 @@ const HotReviewContainer = () => {
     fetch('/reviews')
       .then((response) => response.json())
       .then((result) => {
-        setReviews(result);
+        setReviews(result.reviews);
+        localStorage.setItem('user', result.user._id);
+        console.log(result);
       });
   }, []);
 
@@ -34,7 +36,7 @@ const HotReviewContainer = () => {
         <h2>현재 인기 리뷰!</h2>
       </div>
       {reviews.map((review) => (
-        <ReviewContent review={review} />
+        <ReviewContent review={review} key={review._id} />
       ))}
     </ContentBlock>
   );
