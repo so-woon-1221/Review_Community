@@ -12,7 +12,7 @@ router.post('/review', isLoggedIn, async (req, res, next) => {
       content: req.body.content,
       thumbnail: req.body.thumbnail,
       category: req.body.category,
-      author: req.body.user,
+      author: req.body.author,
     });
     res.send(review);
   } catch (e) {
@@ -67,7 +67,9 @@ router.get('/reviews', async (req, res, next) => {
   // }
 
   try {
-    const reviews = await Review.find({}).sort({ recommend: -1 });
+    const reviews = await Review.find({})
+      .populate('author')
+      .sort({ recommend: -1 });
     console.log(reviews);
     res.send(reviews);
   } catch (e) {

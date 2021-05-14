@@ -18,17 +18,32 @@ export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
 }));
 export const insert = createAction(
   INSERT,
-  ({ title, subtitle, content, thumbnail, category }) => ({
+  ({ title, subtitle, content, thumbnail, category, author }) => ({
     title,
     subtitle,
     content,
     thumbnail,
     category,
+    author,
   }),
 );
 
-const insertReview = ({ title, subtitle, content, thumbnail, category }) =>
-  axios.post('/review', { title, subtitle, content, thumbnail, category });
+const insertReview = ({
+  title,
+  subtitle,
+  content,
+  thumbnail,
+  category,
+  author,
+}) =>
+  axios.post('/review', {
+    title,
+    subtitle,
+    content,
+    thumbnail,
+    category,
+    author,
+  });
 const insertSaga = createRequestSaga(INSERT, insertReview);
 
 export function* reviewSaga() {
@@ -43,7 +58,7 @@ const initialState = {
   category: '',
   review: '',
   error: '',
-  // reviews: null,
+  author: '',
 };
 
 const review = handleActions(

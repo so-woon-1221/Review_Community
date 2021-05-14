@@ -5,16 +5,25 @@ import { insert, changeField, initialize } from '../modules/review';
 import { withRouter } from 'react-router-dom';
 
 const ReviewInsertContainer = ({ history }) => {
-  const { title, subtitle, content, thumbnail, category, review } = useSelector(
-    ({ review }) => ({
-      title: review.title,
-      subtitle: review.subtitle,
-      content: review.content,
-      thumbnail: review.thumbnail,
-      category: review.category,
-      review: review.review,
-    }),
-  );
+  let {
+    title,
+    subtitle,
+    content,
+    thumbnail,
+    category,
+    review,
+    author,
+    error,
+  } = useSelector(({ review, login }) => ({
+    title: review.title,
+    subtitle: review.subtitle,
+    content: review.content,
+    thumbnail: review.thumbnail,
+    category: review.category,
+    review: review.review,
+    author: login.user,
+    error: review.error,
+  }));
 
   const dispatch = useDispatch();
   const onChangeField = useCallback(
@@ -22,6 +31,9 @@ const ReviewInsertContainer = ({ history }) => {
     [dispatch],
   );
   const onInsert = () => {
+    if (author._id) {
+      author = author._id;
+    }
     let errorMessage = '';
     if (title === '') {
       errorMessage += '[제목] ';
@@ -42,7 +54,16 @@ const ReviewInsertContainer = ({ history }) => {
       alert(`${errorMessage} 빈칸입니다. `);
       return;
     }
-    dispatch(insert({ title, subtitle, content, thumbnail, category }));
+    dispatch(
+      insert({
+        title,
+        subtitle,
+        content,
+        thumbnail,
+        category,
+        author,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -54,7 +75,10 @@ const ReviewInsertContainer = ({ history }) => {
     if (review.message) {
       alert(review.message);
     }
-  }, [history, review]);
+    if (error) {
+      alert(error);
+    }
+  }, [dispatch, history, review, title]);
 
   return (
     <ReviewInsert

@@ -1,13 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled(Link)`
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
   height: 300px;
   display: flex;
   border-bottom: 1px solid #dddddd;
+  text-decoration: none;
+  color: black;
   &:last-child {
     border-bottom: none;
   }
@@ -31,21 +34,25 @@ const ContentDescription = styled.div`
     margin: 0 0 10px;
   }
 
-  p {
+  span {
     margin: 0 0 10px;
+    background: #eeeeee;
+    padding: 5px;
+    border-radius: 5px;
+    box-sizing: border-box;
   }
 `;
 
 const ReviewContent = ({ review }) => {
   return (
-    <ContentWrapper key={review._id}>
-      {/*<img src={review.thumbnail} />*/}
+    <ContentWrapper key={review._id} to={`/reviews/${review._id}`}>
+      <img src={review.thumbnail} />
       <ContentDescription>
         <h2>{review.title}</h2>
         <h3>
-          {review.subtitle} by {review.subtitle}
+          {review.subtitle} by <i>{review.author.name}</i>
         </h3>
-        <p>{review.content}</p>
+        <span>{review.category}</span>
       </ContentDescription>
     </ContentWrapper>
   );
