@@ -1,10 +1,38 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { Viewer } from '@toast-ui/react-editor';
+
+import {
+  faThumbsUp,
+  faThumbsDown,
+  faTrashAlt,
+  faEdit,
+} from '@fortawesome/free-regular-svg-icons';
+import { Link } from 'react-router-dom';
 
 const ReviewBlock = styled.div`
-  padding: 20px 15%;
+  padding: 0 15%;
+`;
+
+const ButtonBlock = styled.div`
+  border-top: 1px solid #dddddd;
+  padding-top: 10px;
+
+  button {
+    background: none;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    &:hover {
+      color: red;
+    }
+
+    &:first-child {
+      padding: 10px 20px 10px 0;
+    }
+  }
 `;
 
 const ReviewHeader = styled.div`
@@ -54,9 +82,10 @@ const ReviewHeader = styled.div`
   }
 `;
 
-const Review = ({ review, onClickUp, onClickDown }) => {
-  const { title, subtitle, content, thumbnail, recommend } = review;
+const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
+  const { title, subtitle, content, thumbnail, recommend, _id } = review;
   const [name, setName] = useState('');
+  const [loginUser, setLoginUser] = useState(user);
   const header = useRef(null);
 
   useEffect(() => {
@@ -64,7 +93,10 @@ const Review = ({ review, onClickUp, onClickDown }) => {
       setName(review.author.name);
       header.current.style.backgroundImage = `url(${thumbnail})`;
     }
-  }, [review, thumbnail]);
+    if (user._id) {
+      setLoginUser(user._id);
+    }
+  }, [review, thumbnail, user._id]);
 
   return (
     <>
@@ -84,7 +116,21 @@ const Review = ({ review, onClickUp, onClickDown }) => {
           </button>{' '}
         </p>
       </ReviewHeader>
-      <ReviewBlock dangerouslySetInnerHTML={{ __html: content }} />
+      <ReviewBlock>
+        {content && <Viewer initialValue={content} />}
+        {review.author && loginUser === review.author._id && (
+          <ButtonBlock>
+            <Link to={`/review/${_id}`}>
+              <button>
+                <FontAwesomeIcon icon={faEdit} />
+              </button>
+            </Link>
+            <button onClick={onDelete}>
+              <FontAwesomeIcon icon={faTrashAlt} />
+            </button>
+          </ButtonBlock>
+        )}
+      </ReviewBlock>
     </>
   );
 };

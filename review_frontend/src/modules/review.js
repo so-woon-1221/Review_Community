@@ -8,8 +8,8 @@ const CHANGE_FIELD = 'review/CHANGE_FIELD';
 const INSERT = 'review/INSERT';
 const INSERT_SUCCESS = 'review/INSERT_SUCCESS';
 const INSERT_FAILURE = 'review/INSERT_FAILURE';
-// const GET = 'review/GET';
-// const GET_SUCCESS = 'review/GET_REVIEWS';
+const GET = 'review/GET';
+const GET_SUCCESS = 'review/GET_REVIEWS';
 
 export const initialize = createAction(INITIALIZE);
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
@@ -27,7 +27,7 @@ export const insert = createAction(
     author,
   }),
 );
-// export const get = createAction(GET, ({ id }) => ({ id }));
+export const get = createAction(GET, ({ id }) => ({ id }));
 
 const insertReview = ({
   title,
@@ -47,10 +47,12 @@ const insertReview = ({
   });
 const insertSaga = createRequestSaga(INSERT, insertReview);
 
-// const getReview = ({ id }) => axios.get('/reviews/');
+const getReview = ({ id }) => axios.get(`/reviews/${id}`);
+const getReviewSaga = createRequestSaga(GET, getReview);
 
 export function* reviewSaga() {
   yield takeLatest(INSERT, insertSaga);
+  yield takeLatest(GET, getReviewSaga);
 }
 
 const initialState = {
@@ -81,6 +83,10 @@ const review = handleActions(
     [INSERT_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
+    }),
+    [GET_SUCCESS]: (state, { payload: review }) => ({
+      ...state,
+      review,
     }),
     [INITIALIZE]: (state) => initialState,
   },

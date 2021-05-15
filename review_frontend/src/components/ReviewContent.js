@@ -6,7 +6,7 @@ const ContentWrapper = styled(Link)`
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
-  height: 300px;
+  //height: 300px;
   display: flex;
   border-bottom: 1px solid #dddddd;
   text-decoration: none;
@@ -14,16 +14,23 @@ const ContentWrapper = styled(Link)`
   &:last-child {
     border-bottom: none;
   }
-  img {
-    max-width: 50%;
-  }
   @media screen and (max-width: 768px) {
     padding: 0;
   }
 `;
 
+const ContentImage = styled.div`
+  width: 40%;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+`;
+
 const ContentDescription = styled.div`
-  width: 70%;
+  width: 50%;
   padding-left: 20px;
 
   h2 {
@@ -46,7 +53,9 @@ const ContentDescription = styled.div`
 const ReviewContent = ({ review }) => {
   return (
     <ContentWrapper key={review._id} to={`/reviews/${review._id}`}>
-      <img src={review.thumbnail} />
+      <ContentImage>
+        <img src={review.thumbnail} alt={review.title} />
+      </ContentImage>
       <ContentDescription>
         <h2>{review.title}</h2>
         <h3>

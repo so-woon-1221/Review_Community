@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import Review from '../components/Review';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-const ReviewContainer = ({ match }) => {
+const ReviewContainer = ({ match, history }) => {
   const [review, setReview] = useState('');
+  const { user } = useSelector(({ login }) => ({
+    user: login.user,
+  }));
+
   const id = match.params.id;
   useEffect(() => {
     fetch(`/reviews/${id}`)
@@ -32,8 +37,24 @@ const ReviewContainer = ({ match }) => {
     }
   };
 
+  const onDelete = async () => {
+    if (window.confirm('삭제하시겟습니까?') && review) {
+      const result = axios.delete(`/reviews/${id}`);
+      if (result) {
+        history.push('/');
+        window.location.reload();
+      }
+    }
+  };
+
   return (
-    <Review review={review} onClickUp={onClickUp} onClickDown={onClickDown} />
+    <Review
+      review={review}
+      onClickUp={onClickUp}
+      onClickDown={onClickDown}
+      onDelete={onDelete}
+      user={user}
+    />
   );
 };
 

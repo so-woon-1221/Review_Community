@@ -104,4 +104,14 @@ router.post('/:id/recommend', async (req, res, next) => {
   }
 });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const result = await Review.findOneAndDelete({ _id: req.params.id });
+    res.send(result);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 module.exports = router;
