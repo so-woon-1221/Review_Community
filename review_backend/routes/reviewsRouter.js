@@ -29,7 +29,7 @@ const router = express.Router();
 //   };
 // };
 
-router.get('/', isLoggedIn, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   // const { page } = req.query;
   // try {
   //   const totalPost = await Review.countDocuments({});
@@ -51,15 +51,26 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   //   next(e);
   // }
 
+  const { category } = req.query ? req.query : 'all';
+  console.log(category);
+  let reviews = '';
   try {
-    const reviews = await Review.find({})
-      .populate('author')
-      .sort({ recommend: -1 });
+    if (category && category !== 'all') {
+      reviews = await Review.find({ category: category })
+        .populate('author')
+        .sort({ createdAt: -1 });
+    } else {
+      reviews = await Review.find({})
+        .populate('author')
+        .sort({ createdAt: -1 });
+    }
     const token = req.cookies['access_token'];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({ email: decoded.email });
-    // console.log(user);
-    res.send({ reviews, user });
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findOne({ email: decoded.email });
+      return res.send({ reviews, user });
+    }
+    return res.send({ reviews });
   } catch (e) {
     console.error(e);
     next(e);

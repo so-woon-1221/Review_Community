@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
+import ReviewContent from '../components/ReviewContent';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
@@ -81,11 +84,27 @@ const WriteButton = styled(Link)`
   //color: #a7c0f2;
 `;
 
-const ReviewListContainer = ({ history }) => {
+const ReviewListContainer = ({ location }) => {
   const categories = ['all', 'tech', 'food', 'cafe'];
   const { user } = useSelector(({ login }) => ({
     user: login.user,
   }));
+  const [reviews, setReviews] = useState(null);
+
+  useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (!query.category) {
+      query.category = 'all';
+    }
+    fetch(`/reviews?category=${query.category}`)
+      .then((response) => response.json())
+      .then((result) => {
+        setReviews(result.reviews);
+        if (result.user) {
+          localStorage.setItem('user', result.user._id);
+        }
+      });
+  }, [location.search]);
 
   return (
     <ContentBlock>
@@ -95,7 +114,7 @@ const ReviewListContainer = ({ history }) => {
           {categories.map((category) => (
             // onclick 이벤트 달아서 useEffect에 category state가 바뀌면 렌더링되도록
             // 기본 category staete는 all
-            <li>
+            <li key={category}>
               <CategoryLink to={`/reviews?category=${category}`}>
                 {category}
               </CategoryLink>
@@ -104,32 +123,12 @@ const ReviewListContainer = ({ history }) => {
           {user !== '' ? <WriteButton to={'/review'}>글쓰기</WriteButton> : ''}
         </CategoryList>
       </CategoryWrapper>
-      <ContentWrapper>
-        <img src={'test.jpg'} />
-        <ContentDescription>
-          <h2>아이폰12</h2>
-          <h3>사격형의 아이폰! by 작성자</h3>
-          <p>간단 설명</p>
-        </ContentDescription>
-      </ContentWrapper>
-      <ContentWrapper>
-        <img src={'test.jpg'} />
-        <ContentDescription>
-          <h2>아이폰12</h2>
-          <h3>사격형의 아이폰! by 작성자</h3>
-          <p>간단 설명</p>
-        </ContentDescription>
-      </ContentWrapper>
-      <ContentWrapper>
-        <img src={'test.jpg'} />
-        <ContentDescription>
-          <h2>아이폰12</h2>
-          <h3>사격형의 아이폰! by 작성자</h3>
-          <p>간단 설명</p>
-        </ContentDescription>
-      </ContentWrapper>
+      {reviews &&
+        reviews.map((review) => (
+          <ReviewContent key={review._id} review={review} />
+        ))}
     </ContentBlock>
   );
 };
 
-export default ReviewListContainer;
+export default withRouter(ReviewListContainer);

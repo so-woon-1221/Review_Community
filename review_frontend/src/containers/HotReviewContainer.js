@@ -21,12 +21,14 @@ const HotReviewContainer = () => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    fetch('/reviews')
+    fetch('/index')
       .then((response) => response.json())
       .then((result) => {
+        // console.log(result);
         setReviews(result.reviews);
-        localStorage.setItem('user', result.user._id);
-        console.log(result);
+        if (result.user) {
+          localStorage.setItem('user', result.user._id);
+        }
       });
   }, []);
 
@@ -35,9 +37,10 @@ const HotReviewContainer = () => {
       <div>
         <h2>현재 인기 리뷰!</h2>
       </div>
-      {reviews.map((review) => (
-        <ReviewContent review={review} key={review._id} />
-      ))}
+      {reviews &&
+        reviews.map((review) => (
+          <ReviewContent review={review} key={review._id} />
+        ))}
     </ContentBlock>
   );
 };
