@@ -52,12 +52,12 @@ const Header = ({ user }) => {
     <HeaderBlock>
       <HeaderLogo>
         <HeaderLink to={'/'}>
-          <h1>REVIEWS</h1>
+          <h1>REVIEWERS</h1>
         </HeaderLink>
       </HeaderLogo>
       <HeaderContent>
         <HeaderLink to={'/'}>
-          <h3>Home</h3>
+          <h3>HOME</h3>
         </HeaderLink>
         <HeaderLink to={'/reviews'}>
           <h3>REVIEWS</h3>
@@ -67,11 +67,11 @@ const Header = ({ user }) => {
         </HeaderLink>
         {user === '' ? (
           <HeaderLink to={'/login'}>
-            <h3>Login</h3>
+            <h3>LOGIN</h3>
           </HeaderLink>
         ) : (
           <HeaderLink to={'/logout'}>
-            <h3>Logout</h3>
+            <h3>LOGOUT</h3>
           </HeaderLink>
         )}
       </HeaderContent>

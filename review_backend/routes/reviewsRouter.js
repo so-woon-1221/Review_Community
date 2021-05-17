@@ -51,19 +51,24 @@ router.get('/', async (req, res, next) => {
   //   next(e);
   // }
 
-  const { category } = req.query ? req.query : 'all';
-  console.log(category);
+  // const { category } = req.query ? req.query : 'all';
+  const { category, sort } = req.query;
+  console.log(req.query);
   let reviews = '';
+  let filter = {};
+  let sorted = {};
   try {
     if (category && category !== 'all') {
-      reviews = await Review.find({ category: category })
-        .populate('author')
-        .sort({ createdAt: -1 });
-    } else {
-      reviews = await Review.find({})
-        .populate('author')
-        .sort({ createdAt: -1 });
+      filter.category = category;
     }
+    if (sort === 'recommend') {
+      sorted.recommend = -1;
+      sorted.createdAt = -1;
+    }
+    if (sort === 'latest') {
+      sorted.createdAt = -1;
+    }
+    reviews = await Review.find(filter).populate('author').sort(sorted);
     const token = req.cookies['access_token'];
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

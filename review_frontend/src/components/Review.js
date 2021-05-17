@@ -47,7 +47,7 @@ const ReviewHeader = styled.div`
 
   width: 100%;
   height: 550px;
-  padding-top: 150px;
+  padding-top: 100px;
 
   h1 {
     font-size: 50px;
@@ -55,6 +55,10 @@ const ReviewHeader = styled.div`
   }
   h2 {
     font-size: 30px;
+  }
+
+  h3 {
+    font-size: 20px;
   }
   div {
     position: absolute;
@@ -68,7 +72,7 @@ const ReviewHeader = styled.div`
   }
   p {
     display: flex;
-    align-items: center;
+    //align-items: center;
     justify-content: center;
     font-size: 20px;
   }
@@ -83,7 +87,16 @@ const ReviewHeader = styled.div`
 `;
 
 const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
-  const { title, subtitle, content, thumbnail, recommend, _id } = review;
+  const {
+    title,
+    subtitle,
+    content,
+    thumbnail,
+    recommend,
+    _id,
+    category,
+  } = review;
+  const [nowCategory, setNowCategory] = useState('');
   const [name, setName] = useState('');
   const [loginUser, setLoginUser] = useState(user);
   const header = useRef(null);
@@ -96,6 +109,20 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
     if (user._id) {
       setLoginUser(user._id);
     }
+    switch (category) {
+      case 'tech':
+        setNowCategory('테크');
+        break;
+      case 'food':
+        setNowCategory('맛집');
+        break;
+      case 'cafe':
+        setNowCategory('카페');
+        break;
+      case 'game':
+        setNowCategory('게임');
+        break;
+    }
   }, [review, thumbnail, user._id]);
 
   return (
@@ -104,8 +131,13 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
         <div />
         <h1>{title}</h1>
         <h2>
-          {subtitle} by <i>{name}</i>
+          {subtitle}
+          <br />
+          <h3>
+            by <i>{name}</i>
+          </h3>
         </h2>
+        <h3># {nowCategory}</h3>
         <p>
           <button onClick={onClickUp}>
             <FontAwesomeIcon icon={faThumbsUp} />

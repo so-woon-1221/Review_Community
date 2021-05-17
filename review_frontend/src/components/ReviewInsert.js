@@ -3,12 +3,6 @@ import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import styled from 'styled-components';
 import { Editor } from '@toast-ui/react-editor';
-import 'highlight.js/styles/github.css';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-
-import hljs from 'highlight.js';
-import javascript from 'highlight.js/lib/languages/javascript';
-hljs.registerLanguage('javascript', javascript);
 
 const EditorBlock = styled.div`
   padding: 20px 15%;
@@ -31,7 +25,6 @@ const EditorBlock = styled.div`
 
 const CategoryWrapper = styled.div`
   font-size: 1.2rem;
-
   span {
     margin-right: 20px;
   }
@@ -45,21 +38,31 @@ const CategoryWrapper = styled.div`
     cursor: pointer;
     background: none;
     &:hover {
-      background: #dddddd;
+      background: #171c26;
+      color: #a7c0f2;
     }
     &.clicked {
-      background: #dddddd;
+      background: #171c26;
+      color: #a7c0f2;
     }
   }
 `;
 
 const ThumbnailWrapper = styled.div`
-  width: 50%;
+  width: 100%;
+  position: relative;
   display: flex;
+  margin-top: 20px;
 
-  img {
-    width: 100%;
-    margin-bottom: 20px;
+  div {
+    width: 50%;
+    margin-left: -250px;
+    box-sizing: border-box;
+    position: relative;
+    img {
+      width: 100%;
+      margin-bottom: 20px;
+    }
   }
 
   label {
@@ -73,6 +76,24 @@ const ThumbnailWrapper = styled.div`
   input[type='file'] {
     margin-bottom: 20px;
     transform: translateX(-1000px);
+  }
+`;
+
+const SubmitButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background: #171c26;
+  color: #a7c0f2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+
+  &:hover {
+    color: #171c26;
+    background: #a7c0f2;
   }
 `;
 
@@ -124,10 +145,10 @@ const ReviewInsert = ({
   };
 
   const categories = [
-    { id: 1, text: 'tech' },
-    { id: 2, text: 'food' },
-    { id: 3, text: 'cafe' },
-    { id: 4, text: 'game' },
+    { id: 1, text: '테크', value: 'tech' },
+    { id: 2, text: '맛집', value: 'food' },
+    { id: 3, text: '카페', value: 'cafe' },
+    { id: 4, text: '게임', value: 'game' },
   ];
 
   const onButtonClick = (e) => {
@@ -137,7 +158,7 @@ const ReviewInsert = ({
       button.classList.remove('clicked');
     }
     e.target.classList.toggle('clicked');
-    setCate(e.target.textContent);
+    setCate(e.target.dataset.category);
   };
 
   useEffect(() => {
@@ -163,11 +184,23 @@ const ReviewInsert = ({
       <CategoryWrapper>
         <span>카테고리</span>
         {categories.map((data) => (
-          <button key={data.id} onClick={onButtonClick}>
+          <button
+            key={data.id}
+            onClick={onButtonClick}
+            data-category={data.value}
+          >
             {data.text}
           </button>
         ))}
       </CategoryWrapper>
+      <Editor
+        previewStyle={'vertical'}
+        height={'600px'}
+        initialEditType={'markdown'}
+        useCommandShorcut={true}
+        ref={editor}
+        onChange={onChangeContent}
+      />
       <ThumbnailWrapper>
         <label htmlFor={'thumbnail'}>썸네일</label>
         <input
@@ -176,20 +209,11 @@ const ReviewInsert = ({
           onChange={onChangeThumbnail}
           accept={'image/*'}
         />
-        <img src={''} ref={thumbnailImage} />
+        <div>
+          <img src={''} ref={thumbnailImage} />
+        </div>
+        <SubmitButton onClick={onInsert}>등록</SubmitButton>
       </ThumbnailWrapper>
-      <Editor
-        previewStyle={'vertical'}
-        height={'600px'}
-        initialEditType={'markdown'}
-        useCommandShorcut={true}
-        ref={editor}
-        onChange={onChangeContent}
-        plugins={[[codeSyntaxHighlight, { hljs }]]}
-      />
-      <br />
-      <br />
-      <button onClick={onInsert}>등록</button>
     </EditorBlock>
   );
 };
