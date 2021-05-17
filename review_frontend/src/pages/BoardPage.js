@@ -1,14 +1,14 @@
 import React from 'react';
 import HeaderContainer from '../containers/HeaderContainer';
-import LoginContainer from '../containers/login/LoginContainer';
+import { Link } from 'react-router-dom';
 
-const LoginPage = () => {
+const BoardPage = () => {
   return (
     <div>
       <HeaderContainer />
-      <LoginContainer />
+      <Link to={'/board/question'}>질문하기</Link>
     </div>
   );
 };
 
-export default LoginPage;
+export default BoardPage;

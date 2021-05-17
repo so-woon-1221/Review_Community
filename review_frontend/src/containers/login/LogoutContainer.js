@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { logoutUser } from '../modules/login';
+import { logoutUser } from '../../modules/login';
 import { useDispatch } from 'react-redux';
 
 const LogoutContainer = ({ history }) => {

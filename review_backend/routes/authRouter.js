@@ -29,6 +29,34 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+router.post('/join/check/email', isNotLoggedIn, async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const exUser = await User.findOne({ email });
+    if (exUser) {
+      return res.send({ message: '이미 존재하는 회원입니다.' });
+    }
+    return res.send({ message: '사용할 수 있습니다.' });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.post('/join/check/name', isNotLoggedIn, async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    const exUser = await User.findOne({ name });
+    if (exUser) {
+      return res.send({ message: '이미 존재하는 닉네임입니다.' });
+    }
+    return res.send({ message: '사용할 수 있습니다.' });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
   try {
     passport.authenticate('local', (passportError, user, info) => {

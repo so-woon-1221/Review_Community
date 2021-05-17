@@ -63,7 +63,7 @@ const Header = ({ user }) => {
           <h3>REVIEWS</h3>
         </HeaderLink>
         <HeaderLink to={'/board'}>
-          <h3>Q&A</h3>
+          <h3>BOARD</h3>
         </HeaderLink>
         {user === '' ? (
           <HeaderLink to={'/login'}>
