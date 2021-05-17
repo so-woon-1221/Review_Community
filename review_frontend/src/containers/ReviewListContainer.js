@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import ReviewContent from '../components/ReviewContent';
+import axios from 'axios';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
@@ -118,6 +119,7 @@ const ReviewListContainer = ({ location }) => {
 
   useEffect(() => {
     let query = queryString.parse(location.search);
+    // console.log(query);
     if (!query.category) {
       query.category = 'all';
     }
@@ -130,24 +132,23 @@ const ReviewListContainer = ({ location }) => {
     if (sort === 'latest') {
       latest.current.classList.add('clicked');
       recommend.current.classList.remove('clicked');
-      // latest.current.style.paddingLeft = '10px';
     } else {
       recommend.current.classList.add('clicked');
       latest.current.classList.remove('clicked');
-      // latest.current.style.paddingLeft = '0';
     }
     const categoryLinks = document.querySelectorAll('li');
     for (let categoryLink of categoryLinks) {
       if (categoryLink.dataset.click === nowCategory) {
-        console.log(categoryLink.dataset.click);
         categoryLink.firstElementChild.classList.add('clicked');
       } else {
         categoryLink.firstElementChild.classList.remove('clicked');
       }
     }
+
     fetch(`/reviews?category=${nowCategory}&sort=${sort}`)
       .then((response) => response.json())
       .then((result) => {
+        // console.log(result);
         setReviews(result.reviews);
         if (result.user) {
           localStorage.setItem('user', result.user._id);

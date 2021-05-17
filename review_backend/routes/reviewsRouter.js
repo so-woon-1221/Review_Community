@@ -82,41 +82,4 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const review = await Review.findById(req.params.id).populate('author');
-    // console.log(review);
-    res.send(review);
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-});
-
-router.post('/:id/recommend', async (req, res, next) => {
-  try {
-    const recommend = req.body.recommend;
-    const number = req.body.number;
-    const newReview = await Review.findOneAndUpdate(
-      { _id: req.params.id },
-      { recommend: +recommend + number },
-      { new: true },
-    );
-    res.send(newReview);
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-});
-
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const result = await Review.findOneAndDelete({ _id: req.params.id });
-    res.send(result);
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-});
-
 module.exports = router;

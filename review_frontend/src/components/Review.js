@@ -25,12 +25,15 @@ const ButtonBlock = styled.div`
     padding: 10px;
     font-size: 20px;
     cursor: pointer;
-    &:hover {
-      color: red;
+    &:first-child:hover {
+      color: #a7c0f2;
     }
-
     &:first-child {
       padding: 10px 20px 10px 0;
+    }
+
+    &:nth-child(2):hover {
+      color: red;
     }
   }
 `;
@@ -123,7 +126,7 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
         setNowCategory('게임');
         break;
     }
-  }, [review, thumbnail, user._id]);
+  }, [category, review, thumbnail, user._id]);
 
   return (
     <>

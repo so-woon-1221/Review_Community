@@ -3,6 +3,7 @@ import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import styled from 'styled-components';
 import { Editor } from '@toast-ui/react-editor';
+import axios from 'axios';
 
 const EditorBlock = styled.div`
   padding: 20px 15%;
@@ -97,32 +98,20 @@ const SubmitButton = styled.button`
   }
 `;
 
-const ReviewInsert = ({
-  onInsert,
-  onChangeField,
-  title,
-  subtitle,
-  content,
-  thumbnail,
-  category,
-}) => {
-  const [cate, setCate] = useState('');
+const ReviewUpdate = ({ review, onSubmit }) => {
   const editor = useRef(null);
   const thumbnailImage = useRef(null);
-  const onChangeTitle = (e) => {
-    onChangeField({ key: 'title', value: e.target.value });
-  };
-
-  const onChangeSubtitle = (e) => {
-    onChangeField({ key: 'subtitle', value: e.target.value });
-  };
+  const [nowCategory, setNowCategory] = useState('');
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [content, setContent] = useState('');
+  const [thumbnail, setThumbnail] = useState('');
 
   const onChangeContent = useCallback(() => {
     const editorInstance = editor.current.getInstance();
-    // const getContent = editorInstance.getHtml();
     const getContent = editorInstance.getMarkdown();
-    onChangeField({ key: 'content', value: getContent });
-  }, [onChangeField]);
+    setContent(getContent);
+  }, []);
 
   const encodeBase64ImageFile = (image) => {
     return new Promise((resolve, reject) => {
@@ -140,7 +129,7 @@ const ReviewInsert = ({
   const onChangeThumbnail = (e) => {
     encodeBase64ImageFile(e.target.files[0]).then((data) => {
       const result = data.toString();
-      onChangeField({ key: 'thumbnail', value: result });
+      setThumbnail(result);
       thumbnailImage.current.src = result;
     });
   };
@@ -158,65 +147,89 @@ const ReviewInsert = ({
     for (let button of buttons) {
       button.classList.remove('clicked');
     }
-    e.target.classList.toggle('clicked');
-    setCate(e.target.dataset.category);
+    e.target.classList.add('clicked');
+    setNowCategory(e.target.dataset.category);
+  };
+
+  const onUpdate = () => {
+    onSubmit(title, subtitle, content, thumbnail, nowCategory);
   };
 
   useEffect(() => {
-    onChangeField({ key: 'category', value: cate });
-  }, [cate, onChangeField]);
+    if (review) {
+      setTitle(review.title);
+      setSubtitle(review.subtitle);
+      setContent(review.content);
+      setNowCategory(review.category);
+      setThumbnail(review.thumbnail);
+    }
+  }, [review]);
+  useEffect(() => {
+    const categoryButtons = document.querySelectorAll('.category-button');
+    for (let categoryButton of categoryButtons) {
+      if (categoryButton.dataset.category === nowCategory) {
+        categoryButton.classList.add('clicked');
+      }
+    }
+  }, [nowCategory]);
 
   return (
-    <EditorBlock>
-      <input
-        type={'text'}
-        value={title}
-        onChange={onChangeTitle}
-        placeholder={'제목'}
-        className={'title'}
-      />
-      <input
-        type={'text'}
-        value={subtitle}
-        onChange={onChangeSubtitle}
-        placeholder={'부제목'}
-        className={'subtitle'}
-      />
-      <CategoryWrapper>
-        <span>카테고리</span>
-        {categories.map((data) => (
-          <button
-            key={data.id}
-            onClick={onButtonClick}
-            data-category={data.value}
-          >
-            {data.text}
-          </button>
-        ))}
-      </CategoryWrapper>
-      <Editor
-        previewStyle={'vertical'}
-        height={'600px'}
-        initialEditType={'markdown'}
-        useCommandShorcut={true}
-        ref={editor}
-        onChange={onChangeContent}
-      />
-      <ThumbnailWrapper>
-        <label htmlFor={'thumbnail'}>썸네일</label>
+    review && (
+      <EditorBlock>
         <input
-          id={'thumbnail'}
-          type={'file'}
-          onChange={onChangeThumbnail}
-          accept={'image/*'}
+          type={'text'}
+          placeholder={'제목'}
+          className={'title'}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <div>
-          <img src={''} ref={thumbnailImage} />
-        </div>
-        <SubmitButton onClick={onInsert}>등록</SubmitButton>
-      </ThumbnailWrapper>
-    </EditorBlock>
+        <input
+          type={'text'}
+          placeholder={'부제목'}
+          className={'subtitle'}
+          value={subtitle}
+          onChange={(e) => setSubtitle(e.target.value)}
+        />
+        <CategoryWrapper>
+          <span>카테고리</span>
+          {categories.map((data) => (
+            <button
+              key={data.id}
+              onClick={onButtonClick}
+              data-category={data.value}
+              className={'category-button'}
+            >
+              {data.text}
+            </button>
+          ))}
+        </CategoryWrapper>
+        {content && (
+          <Editor
+            previewStyle={'vertical'}
+            height={'600px'}
+            initialEditType={'markdown'}
+            useCommandShorcut={true}
+            ref={editor}
+            onChange={onChangeContent}
+            initialValue={content}
+          />
+        )}
+        <ThumbnailWrapper>
+          <label htmlFor={'thumbnail'}>썸네일</label>
+          <input
+            id={'thumbnail'}
+            type={'file'}
+            onChange={onChangeThumbnail}
+            accept={'image/*'}
+          />
+          <div>
+            <img src={thumbnail} ref={thumbnailImage} />
+          </div>
+          <SubmitButton onClick={onUpdate}>수정</SubmitButton>
+        </ThumbnailWrapper>
+      </EditorBlock>
+    )
   );
 };
 
-export default ReviewInsert;
+export default ReviewUpdate;

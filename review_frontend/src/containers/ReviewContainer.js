@@ -12,7 +12,7 @@ const ReviewContainer = ({ match, history }) => {
 
   const id = match.params.id;
   useEffect(() => {
-    fetch(`/reviews/${id}`)
+    fetch(`/review/${id}`)
       .then((response) => response.json())
       .then((result) => {
         setReview(result);
@@ -23,7 +23,7 @@ const ReviewContainer = ({ match, history }) => {
     if (review) {
       const recommend = review.recommend;
       const number = 1;
-      await axios.post(`/reviews/${id}/recommend`, { recommend, number });
+      await axios.post(`/review/${id}/recommend`, { recommend, number });
       window.location.reload();
     }
   };
@@ -32,14 +32,14 @@ const ReviewContainer = ({ match, history }) => {
     if (review) {
       const recommend = review.recommend;
       const number = -1;
-      await axios.post(`/reviews/${id}/recommend`, { recommend, number });
+      await axios.post(`/review/${id}/recommend`, { recommend, number });
       window.location.reload();
     }
   };
 
   const onDelete = async () => {
     if (window.confirm('삭제하시겟습니까?') && review) {
-      const result = axios.delete(`/reviews/${id}`);
+      const result = axios.delete(`/review/${id}`);
       if (result) {
         history.push('/');
         window.location.reload();
