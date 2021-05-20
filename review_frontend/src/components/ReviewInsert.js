@@ -150,6 +150,7 @@ const ReviewInsert = ({
     { id: 2, text: '맛집', value: 'food' },
     { id: 3, text: '카페', value: 'cafe' },
     { id: 4, text: '게임', value: 'game' },
+    { id: 5, text: '패션', value: 'fashion' },
   ];
 
   const onButtonClick = (e) => {

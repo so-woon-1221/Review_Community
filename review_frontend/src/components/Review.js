@@ -94,6 +94,11 @@ const ReviewHeader = styled.div`
   }
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: white;
+`;
+
 const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
   const {
     title,
@@ -106,6 +111,7 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
   } = review;
   const [nowCategory, setNowCategory] = useState('');
   const [name, setName] = useState('');
+  const [author, setAuthor] = useState('');
   const [loginUser, setLoginUser] = useState(user);
   const header = useRef(null);
 
@@ -113,6 +119,7 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
     if (review.author) {
       setName(review.author.name);
       header.current.style.backgroundImage = `url(${thumbnail})`;
+      setAuthor(review.author._id);
     }
     if (user._id) {
       setLoginUser(user._id);
@@ -142,7 +149,10 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
           {subtitle}
           <br />
           <h3>
-            by <i>{name}</i>
+            by{' '}
+            <i>
+              <StyledLink to={`/reviews?author=${author}`}>{name}</StyledLink>
+            </i>
           </h3>
         </h2>
         <h3># {nowCategory}</h3>

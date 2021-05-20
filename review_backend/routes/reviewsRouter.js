@@ -6,40 +6,6 @@ const User = require('../schemas/user');
 
 const router = express.Router();
 
-router.get('/search', async (req, res, next) => {
-  const { category, sort, search } = req.query;
-  let reviews = '';
-  let filter = {};
-  let sorted = {};
-  try {
-    if (category && category !== 'all') {
-      filter.category = category;
-    }
-    if (sort === 'recommend') {
-      sorted.recommend = -1;
-      sorted.createdAt = -1;
-    }
-    if (sort === 'latest') {
-      sorted.createdAt = -1;
-    }
-    if (search) {
-      filter.$text = { $search: search };
-    }
-    reviews = await Review.find(filter).populate('author').sort(sorted);
-    const token = req.cookies['access_token'];
-    if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findOne({ email: decoded.email });
-      return res.send({ reviews, user });
-    }
-    console.log(reviews);
-    // return res.send({ reviews });
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-});
-
 // const paging = (page, totalPost) => {
 //   const maxPost = 10;
 //   let currentPage = page ? parseInt(page) : 1;
@@ -86,11 +52,12 @@ router.get('/', async (req, res, next) => {
   // }
 
   // const { category } = req.query ? req.query : 'all';
-  const { category, sort } = req.query;
+  const { category, sort, author, search } = req.query;
   console.log(req.query);
   let reviews = '';
   let filter = {};
   let sorted = {};
+  let name = '';
   try {
     if (category && category !== 'all') {
       filter.category = category;
@@ -102,14 +69,31 @@ router.get('/', async (req, res, next) => {
     if (sort === 'latest') {
       sorted.createdAt = -1;
     }
-    reviews = await Review.find(filter).populate('author').sort(sorted);
+    if (search) {
+      const exUser = await User.findOne({ name: search });
+      if (exUser) {
+        filter.author = exUser._id;
+      } else {
+        filter.$text = { $search: search };
+      }
+    }
+    if (author) {
+      filter.author = author;
+      name = await User.findOne({ _id: author });
+    }
+    const count = await Review.find(filter).count();
+    if (count > 0) {
+      reviews = await Review.find(filter).populate('author').sort(sorted);
+    } else {
+      reviews = '검색 결과 없음';
+    }
     const token = req.cookies['access_token'];
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await User.findOne({ email: decoded.email });
-      return res.send({ reviews, user });
+      return res.send({ reviews, user, name });
     }
-    return res.send({ reviews });
+    return res.send({ reviews, name });
   } catch (e) {
     console.error(e);
     next(e);

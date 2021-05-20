@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import ReviewContent from '../components/ReviewContent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
@@ -83,10 +83,6 @@ const StyledLink = styled(Link)`
 const WriteButton = styled(Link)`
   text-decoration: none;
   color: #171c26;
-  //position: absolute;
-  //right: 0;
-  //bottom: 0;
-  //top: 0;
   h2 {
     margin: 0;
   }
@@ -102,7 +98,6 @@ const WriteButton = styled(Link)`
 
 const SortBlock = styled.div`
   margin-top: 15px;
-  float: right;
   border-bottom: 1px solid #dddddd;
   width: 100%;
   padding-bottom: 10px;
@@ -116,27 +111,46 @@ const SearchBlock = styled.div`
   display: flex;
   align-items: center;
   margin-top: 20px;
-  //position: relative;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
 
-  select {
-    margin-right: 20px;
-    border-radius: 5px;
-    border: none;
+  div {
+    flex: 1;
   }
 `;
 
 const SearchWrapper = styled.div`
   display: flex;
   input {
-    //width: 300px;
     border: none;
     border-bottom: 1px solid #dddddd;
     margin-right: 20px;
+    flex: 1;
+    height: 30px;
+    font-size: 20px;
   }
 
-  div {
+  svg {
     cursor: pointer;
+    height: 40px;
+    font-size: 20px;
   }
+`;
+
+const AuthorWrapper = styled.div`
+  display: block;
+  align-items: center;
+  margin-top: 10px;
+
+  svg:hover {
+    color: red;
+  }
+`;
+
+const BlackLink = styled(Link)`
+  color: black;
+  text-decoration: none;
 `;
 
 const ReviewListContainer = ({ location }) => {
@@ -161,14 +175,12 @@ const ReviewListContainer = ({ location }) => {
       text: '게임',
       value: 'game',
     },
+    {
+      text: '패션',
+      value: 'fashion',
+    },
   ];
 
-  const searchOption = [
-    { text: '제목+내용', value: 'all' },
-    { text: '제목', value: 'title' },
-    { text: '내용', value: 'content' },
-    { text: '작성자', value: 'author' },
-  ];
   const [nowCategory, setNowCategory] = useState('');
   const { user } = useSelector(({ login }) => ({
     user: login.user,
@@ -176,12 +188,14 @@ const ReviewListContainer = ({ location }) => {
   const [sort, setSort] = useState('');
   const [reviews, setReviews] = useState(null);
   const [search, setSearch] = useState('');
+  const [author, setAuthor] = useState('');
+  const [name, setName] = useState('');
   const latest = useRef(null);
   const recommend = useRef(null);
 
   const onClickSearch = () => {
     fetch(
-      `/reviews/search?category=${nowCategory}&sort=${sort}&search=${search}`,
+      `/reviews/?category=${nowCategory}&sort=${sort}&search=${search}${author}`,
     )
       .then((response) => response.json())
       .then((result) => {
@@ -202,6 +216,11 @@ const ReviewListContainer = ({ location }) => {
     if (!query.sort) {
       query.sort = 'latest';
     }
+    if (query.author) {
+      setAuthor(`&author=${query.author}`);
+    } else {
+      setAuthor('');
+    }
     setNowCategory(query.category);
     setSort(query.sort);
 
@@ -220,17 +239,22 @@ const ReviewListContainer = ({ location }) => {
         categoryLink.firstElementChild.classList.remove('clicked');
       }
     }
-
-    fetch(`/reviews?category=${nowCategory}&sort=${sort}`)
+  }, [author, location.search, nowCategory, sort]);
+  useEffect(() => {
+    fetch(
+      `/reviews?category=${nowCategory}&sort=${sort}${author}&search=${search}`,
+    )
       .then((response) => response.json())
       .then((result) => {
-        // console.log(result);
+        if (result.name) {
+          setName(result.name.name);
+        }
         setReviews(result.reviews);
         if (result.user) {
           localStorage.setItem('user', result.user._id);
         }
       });
-  }, [location.search, nowCategory, sort]);
+  }, [author, nowCategory, sort]);
 
   return (
     <ContentBlock>
@@ -251,7 +275,7 @@ const ReviewListContainer = ({ location }) => {
             // 기본 category staete는 all
             <li key={category.text} data-click={category.value}>
               <StyledLink
-                to={`/reviews?category=${category.value}&sort=${sort}`}
+                to={`/reviews?category=${category.value}&sort=${sort}${author}&search=${search}`}
               >
                 {category.text}
               </StyledLink>
@@ -261,33 +285,41 @@ const ReviewListContainer = ({ location }) => {
       </CategoryWrapper>
       <SortBlock>
         <SortLink
-          to={`reviews?category=${nowCategory}&sort=latest`}
+          to={`reviews?category=${nowCategory}&sort=latest${author}&search=${search}`}
           ref={latest}
         >
           최신순
         </SortLink>
         <SortLink
-          to={`reviews?category=${nowCategory}&sort=recommend`}
+          to={`reviews?category=${nowCategory}&sort=recommend${author}&search=${search}`}
           ref={recommend}
         >
           추천순
         </SortLink>
+        {author && (
+          <AuthorWrapper>
+            <b>
+              <i>{name}</i>
+            </b>
+            {'\u00A0'}님의 글{'\u00A0'}
+            <BlackLink
+              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}`}
+            >
+              <FontAwesomeIcon icon={faTimesCircle} />
+            </BlackLink>
+          </AuthorWrapper>
+        )}
       </SortBlock>
       {reviews &&
-        reviews.map((review) => (
-          <ReviewContent key={review._id} review={review} />
+        (reviews === '검색 결과 없음' ? (
+          <AuthorWrapper>검색결과 없음</AuthorWrapper>
+        ) : (
+          reviews.map((review) => (
+            <ReviewContent key={review._id} review={review} />
+          ))
         ))}
       <SearchBlock>
-        {/*<select*/}
-        {/*  name={'search'}*/}
-        {/*  onChange={(e) => {*/}
-        {/*    setOption(e.target.value);*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  {searchOption.map((option) => (*/}
-        {/*    <option key={option.value}>{option.text}</option>*/}
-        {/*  ))}*/}
-        {/*</select>*/}
+        <div />
         <SearchWrapper>
           <input
             type={'text'}
@@ -300,9 +332,7 @@ const ReviewListContainer = ({ location }) => {
               }
             }}
           />
-          <div>
-            <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
-          </div>
+          <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
         </SearchWrapper>
       </SearchBlock>
     </ContentBlock>
