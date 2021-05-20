@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const HeaderBlock = styled.div`
   display: flex;
@@ -23,11 +25,32 @@ const HeaderLogo = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+  button {
+    display: none;
+    background: none;
+    color: white;
+    border: none;
+    font-size: 20px;
+    @media screen and (max-width: 768px) {
+      display: block;
+    }
+  }
 `;
 
 const HeaderContent = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  @media screen and (max-width: 768px) {
+    display: none;
+    height: 0;
+    transition: all 1s ease;
+    //flex-wrap: nowrap;
+    &.open {
+      display: flex;
+      height: auto;
+    }
+  }
 `;
 
 const HeaderLink = styled(Link)`
@@ -45,17 +68,35 @@ const HeaderLink = styled(Link)`
   &:last-child {
     padding-right: 0;
   }
+
+  &.logo {
+    flex: 1;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-right: 15px;
+  }
 `;
 
 const Header = ({ user }) => {
+  const menuButton = useRef(null);
+  const menu = useRef(null);
+
+  const onClick = () => {
+    menu.current.classList.toggle('open');
+  };
+
   return (
     <HeaderBlock>
       <HeaderLogo>
-        <HeaderLink to={'/'}>
+        <HeaderLink to={'/'} className={'logo'}>
           <h1>REVIEWERS</h1>
         </HeaderLink>
+        <button ref={menuButton} onClick={onClick}>
+          <FontAwesomeIcon icon={faBars} />
+        </button>
       </HeaderLogo>
-      <HeaderContent>
+      <HeaderContent ref={menu}>
         <HeaderLink to={'/'}>
           <h3>HOME</h3>
         </HeaderLink>

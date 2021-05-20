@@ -20,7 +20,7 @@ const LoginContainer = ({ history }) => {
 
   const onSubmit = () => {
     if (email === '' || password === '') {
-      alert('빈칸입니다.');
+      alert('이메일과 패스워드 모두 입력해주세요.');
       return;
     }
     dispatch(loginUser({ email, password }));

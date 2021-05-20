@@ -6,6 +6,40 @@ const User = require('../schemas/user');
 
 const router = express.Router();
 
+router.get('/search', async (req, res, next) => {
+  const { category, sort, search } = req.query;
+  let reviews = '';
+  let filter = {};
+  let sorted = {};
+  try {
+    if (category && category !== 'all') {
+      filter.category = category;
+    }
+    if (sort === 'recommend') {
+      sorted.recommend = -1;
+      sorted.createdAt = -1;
+    }
+    if (sort === 'latest') {
+      sorted.createdAt = -1;
+    }
+    if (search) {
+      filter.$text = { $search: search };
+    }
+    reviews = await Review.find(filter).populate('author').sort(sorted);
+    const token = req.cookies['access_token'];
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findOne({ email: decoded.email });
+      return res.send({ reviews, user });
+    }
+    console.log(reviews);
+    // return res.send({ reviews });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 // const paging = (page, totalPost) => {
 //   const maxPost = 10;
 //   let currentPage = page ? parseInt(page) : 1;

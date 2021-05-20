@@ -12,12 +12,17 @@ import {
 import { Link } from 'react-router-dom';
 
 const ReviewBlock = styled.div`
-  padding: 0 15%;
+  padding: 0 15% 20px;
+
+  @media screen and (max-width: 768px) {
+    padding: 0 5% 20px;
+  }
 `;
 
 const ButtonBlock = styled.div`
   border-top: 1px solid #dddddd;
   padding-top: 10px;
+  margin-top: 20px;
 
   button {
     background: none;

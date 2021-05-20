@@ -14,6 +14,7 @@ const ContentWrapper = styled(Link)`
   color: black;
   &:last-child {
     border-bottom: none;
+    padding: 10px 10px 0 0;
   }
   @media screen and (max-width: 768px) {
     padding: 10px 0;
@@ -35,6 +36,7 @@ const ContentImage = styled.div`
   //}
   @media screen and (max-width: 768px) {
     min-width: 100%;
+    margin-bottom: 10px;
   }
 `;
 
@@ -66,6 +68,9 @@ const ContentDescription = styled.div`
     &:before {
       content: '# ';
     }
+  }
+  @media screen and (max-width: 768px) {
+    padding: 0;
   }
 `;
 
