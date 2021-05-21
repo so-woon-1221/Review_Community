@@ -28,7 +28,6 @@ const ContentImage = styled.div`
 
   background: no-repeat center center;
   background-size: cover;
-  background-attachment: scroll;
 
   //img {
   //  height: 100%;
@@ -54,7 +53,7 @@ const ContentDescription = styled.div`
   }
 
   h5 {
-    margin: 10px 0 15px;
+    margin: 0 0 10px;
   }
 
   span {
@@ -106,13 +105,11 @@ const ReviewContent = ({ review }) => {
       </ContentImage>
       <ContentDescription>
         <h2>{review.title}</h2>
-        <h3>
-          {review.subtitle}
-          <br />
-          <h5>
-            by <i>{review.author.name}</i>
-          </h5>
-        </h3>
+        <h3>{review.subtitle}</h3>
+        <h5>
+          by <i>{review.author.name}</i>
+        </h5>
+        <h5>{review.createdAt.substr(0, 10)}</h5>
         <span>{category}</span>
       </ContentDescription>
     </ContentWrapper>

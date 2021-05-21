@@ -9,59 +9,14 @@ import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
-  display: flex;
-  flex-wrap: wrap;
+  //display: flex;
+  //flex-wrap: wrap;
+  h2 {
+    margin: 0;
+  }
 
   @media screen and (max-width: 768px) {
     padding: 20px 5%;
-  }
-`;
-
-const CategoryWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  flex-wrap: wrap;
-  width: 100%;
-  //border-bottom: 1px solid #dddddd;
-  h2 {
-    margin-bottom: 0;
-    @media screen and (max-width: 768px) {
-      flex: 1;
-    }
-  }
-`;
-
-const CategoryHeader = styled.div`
-  width: 100%;
-  display: flex;
-  h2 {
-    margin: 0 0 10px;
-    flex: 1;
-  }
-`;
-
-const CategoryList = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  padding-right: 65px;
-  margin: 0;
-  padding-bottom: 0;
-  padding-left: 0;
-  li {
-    display: block;
-    margin-right: 10px;
-
-    @media screen and (max-width: 768px) {
-      margin-bottom: 10px;
-      margin-top: 10px;
-      width: 70px;
-    }
-  }
-  @media screen and (max-width: 768px) {
-    padding-left: 0;
-    padding-right: 0;
-    margin-top: 10px;
   }
 `;
 
@@ -70,6 +25,7 @@ const StyledLink = styled(Link)`
   color: black;
   padding: 5px 10px;
   border-radius: 5px;
+  margin-right: 10px;
   &:hover {
     cursor: pointer;
   }
@@ -78,33 +34,36 @@ const StyledLink = styled(Link)`
     background: #171c26;
     color: #a7c0f2;
   }
+
+  &.write:hover {
+    background: #171c26;
+    color: #a7c0f2;
+  }
 `;
 
-const WriteButton = styled(Link)`
-  text-decoration: none;
-  color: #171c26;
-  h2 {
+const CategoryBlock = styled.div`
+  ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  div {
+    display: flex;
     margin: 0;
+    h2 {
+      flex: 1;
+    }
   }
-
-  &:hover {
-    border-bottom: 1px solid #171c26;
-  }
-
   @media screen and (max-width: 768px) {
-    top: 0;
+    li {
+      margin-bottom: 10px;
+    }
   }
 `;
-
 const SortBlock = styled.div`
-  margin-top: 15px;
   border-bottom: 1px solid #dddddd;
-  width: 100%;
   padding-bottom: 10px;
-`;
-
-const SortLink = styled(StyledLink)`
-  margin-right: 10px;
 `;
 
 const SearchBlock = styled.div`
@@ -141,7 +100,7 @@ const SearchWrapper = styled.div`
 const AuthorWrapper = styled.div`
   display: block;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
 
   svg:hover {
     color: red;
@@ -258,18 +217,18 @@ const ReviewListContainer = ({ location }) => {
 
   return (
     <ContentBlock>
-      <CategoryWrapper>
-        <CategoryHeader>
+      <CategoryBlock>
+        <div>
           <h2>카테고리</h2>
           {user !== '' ? (
-            <WriteButton to={'/review'}>
-              <h2>글쓰기</h2>
-            </WriteButton>
+            <StyledLink to={'/review'} className={'clicked'}>
+              <b>글쓰기</b>
+            </StyledLink>
           ) : (
             ''
           )}
-        </CategoryHeader>
-        <CategoryList>
+        </div>
+        <ul>
           {categories.map((category) => (
             // onclick 이벤트 달아서 useEffect에 category state가 바뀌면 렌더링되도록
             // 기본 category staete는 all
@@ -281,21 +240,21 @@ const ReviewListContainer = ({ location }) => {
               </StyledLink>
             </li>
           ))}
-        </CategoryList>
-      </CategoryWrapper>
+        </ul>
+      </CategoryBlock>
       <SortBlock>
-        <SortLink
+        <StyledLink
           to={`reviews?category=${nowCategory}&sort=latest${author}&search=${search}`}
           ref={latest}
         >
           최신순
-        </SortLink>
-        <SortLink
+        </StyledLink>
+        <StyledLink
           to={`reviews?category=${nowCategory}&sort=recommend${author}&search=${search}`}
           ref={recommend}
         >
           추천순
-        </SortLink>
+        </StyledLink>
         {author && (
           <AuthorWrapper>
             <b>
@@ -331,6 +290,7 @@ const ReviewListContainer = ({ location }) => {
                 onClickSearch();
               }
             }}
+            onClick={(e) => (e.target.value = '')}
           />
           <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
         </SearchWrapper>

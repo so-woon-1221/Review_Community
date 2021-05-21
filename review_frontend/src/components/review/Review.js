@@ -148,16 +148,13 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
       <ReviewHeader ref={header}>
         <div />
         <h1>{title}</h1>
-        <h2>
-          {subtitle}
-          <br />
-          <h3>
-            by{' '}
-            <i>
-              <StyledLink to={`/reviews?author=${author}`}>{name}</StyledLink>
-            </i>
-          </h3>
-        </h2>
+        <h2>{subtitle}</h2>
+        <h3>
+          by{' '}
+          <i>
+            <StyledLink to={`/reviews?author=${author}`}>{name}</StyledLink>
+          </i>
+        </h3>
         <h3># {nowCategory}</h3>
         <p>
           <button onClick={onClickUp}>

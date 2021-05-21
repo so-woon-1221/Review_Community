@@ -25,6 +25,13 @@ const boardSchema = new Schema({
     ref: 'User',
     required: true,
   },
+  thumbnail: {
+    type: String,
+  },
+  category: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Board', boardSchema);

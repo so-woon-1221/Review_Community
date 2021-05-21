@@ -11,7 +11,7 @@ const LOGIN_FAILURE = 'login/LOGIN_FAILURE';
 const LOGOUT = 'login/LOGOUT';
 const LOGOUT_SUCCESS = 'login/LOGOUT_SUCCESS';
 const TEMP_SET_USER = 'login/TEMP_SET_USER';
-const CLEAER_USER = 'login/CLEAR_USER';
+const CLEAR_USER = 'login/CLEAR_USER';
 
 export const changeField = createAction(CHANGE_FIELD, ({ key, value }) => ({
   key,
@@ -24,7 +24,7 @@ export const loginUser = createAction(LOGIN, ({ email, password }) => ({
 }));
 export const logoutUser = createAction(LOGOUT);
 export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
-export const clearUser = createAction(CLEAER_USER);
+export const clearUser = createAction(CLEAR_USER);
 
 const loginUserApi = ({ email, password }) =>
   axios.post('/auth/login', { email, password });
@@ -66,7 +66,7 @@ const login = handleActions(
     }),
     [LOGOUT_SUCCESS]: (state) => initialState,
     [TEMP_SET_USER]: (state, { payload: user }) => ({ ...state, user }),
-    [CLEAER_USER]: (state) => ({
+    [CLEAR_USER]: (state) => ({
       ...state,
       user: '',
     }),
