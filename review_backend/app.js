@@ -58,6 +58,7 @@ app.use(
     // store: new RedisStore({ client: redisClient }),
   }),
 );
+app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', mainRouter);

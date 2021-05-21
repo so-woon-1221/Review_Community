@@ -3,6 +3,7 @@ import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import styled from 'styled-components';
 import { Editor } from '@toast-ui/react-editor';
+import axios from 'axios';
 
 const EditorBlock = styled.div`
   padding: 20px 15%;
@@ -124,25 +125,10 @@ const ReviewInsert = ({
     onChangeField({ key: 'content', value: getContent });
   }, [onChangeField]);
 
-  const encodeBase64ImageFile = (image) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = (event) => {
-        resolve(event.target.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const onChangeThumbnail = (e) => {
-    encodeBase64ImageFile(e.target.files[0]).then((data) => {
-      const result = data.toString();
-      onChangeField({ key: 'thumbnail', value: result });
-      thumbnailImage.current.src = result;
-    });
+  const onChangeThumbnail = async (e) => {
+    const result = await sendImage(e.target.files[0]);
+    onChangeField({ key: 'thumbnail', value: result });
+    thumbnailImage.current.src = result;
   };
 
   const categories = [
@@ -161,6 +147,18 @@ const ReviewInsert = ({
     }
     e.target.classList.toggle('clicked');
     setCate(e.target.dataset.category);
+  };
+
+  const sendImage = async (img) => {
+    // const resize = await resizeImage(img);
+    // console.log(resize);
+    const formData = new FormData();
+    formData.append('image', img);
+    const result = await axios.post('/review/image', formData, {
+      headers: { 'Content-type': 'multipart/form-data' },
+    });
+
+    return result.data;
   };
 
   useEffect(() => {
@@ -195,13 +193,25 @@ const ReviewInsert = ({
           </button>
         ))}
       </CategoryWrapper>
+      <p>사진은 5mb 미만의 파일만 업로드 할 수 있습니다.</p>
       <Editor
         previewStyle={'vertical'}
-        height={'600px'}
+        height={'700px'}
         initialEditType={'markdown'}
         useCommandShorcut={true}
         ref={editor}
         onChange={onChangeContent}
+        hooks={{
+          addImageBlobHook: async (blob, callback) => {
+            if (blob.size > 5 * 1024 * 1024) {
+              alert('용량 초과');
+            } else {
+              const upload = await sendImage(blob);
+              callback(upload, 'alt text');
+            }
+            return false;
+          },
+        }}
       />
       <ThumbnailWrapper>
         <label htmlFor={'thumbnail'}>썸네일</label>

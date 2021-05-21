@@ -41,7 +41,7 @@ const ReviewContainer = ({ match, history }) => {
     if (window.confirm('삭제하시겟습니까?') && review) {
       const result = axios.delete(`/review/${id}`);
       if (result) {
-        history.push('/');
+        history.push('/reviews');
         window.location.reload();
       }
     }

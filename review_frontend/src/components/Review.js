@@ -137,6 +137,9 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
       case 'game':
         setNowCategory('게임');
         break;
+      case 'fashion':
+        setNowCategory('패션');
+        break;
     }
   }, [category, review, thumbnail, user._id]);
 

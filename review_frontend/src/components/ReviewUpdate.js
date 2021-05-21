@@ -126,12 +126,22 @@ const ReviewUpdate = ({ review, onSubmit }) => {
     });
   };
 
-  const onChangeThumbnail = (e) => {
-    encodeBase64ImageFile(e.target.files[0]).then((data) => {
-      const result = data.toString();
-      setThumbnail(result);
-      thumbnailImage.current.src = result;
+  const onChangeThumbnail = async (e) => {
+    const result = await sendImage(e.target.files[0]);
+    setThumbnail(result);
+    thumbnailImage.current.src = result;
+  };
+
+  const sendImage = async (img) => {
+    // const resize = await resizeImage(img);
+    // console.log(resize);
+    const formData = new FormData();
+    formData.append('image', img);
+    const result = await axios.post('/review/image', formData, {
+      headers: { 'Content-type': 'multipart/form-data' },
     });
+
+    return result.data;
   };
 
   const categories = [
@@ -139,6 +149,7 @@ const ReviewUpdate = ({ review, onSubmit }) => {
     { id: 2, text: '맛집', value: 'food' },
     { id: 3, text: '카페', value: 'cafe' },
     { id: 4, text: '게임', value: 'game' },
+    { id: 5, text: '패션', value: 'fashion' },
   ];
 
   const onButtonClick = (e) => {
@@ -212,6 +223,17 @@ const ReviewUpdate = ({ review, onSubmit }) => {
             ref={editor}
             onChange={onChangeContent}
             initialValue={content}
+            hooks={{
+              addImageBlobHook: async (blob, callback) => {
+                if (blob.size > 5 * 1024 * 1024) {
+                  alert('용량 초과');
+                } else {
+                  const upload = await sendImage(blob);
+                  callback(upload, 'alt text');
+                }
+                return false;
+              },
+            }}
           />
         )}
         <ThumbnailWrapper>

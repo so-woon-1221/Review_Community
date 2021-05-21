@@ -91,6 +91,9 @@ const ReviewContent = ({ review }) => {
       case 'game':
         setCategory('게임');
         break;
+      case 'fashion':
+        setCategory('패션');
+        break;
     }
     if (review.thumbnail) {
       thumbnail.current.style.backgroundImage = `url(${review.thumbnail})`;

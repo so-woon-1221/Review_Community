@@ -3,8 +3,41 @@ const Review = require('../schemas/review');
 const { isLoggedIn, isNotLoggedIn } = require('./jwtMiddleware');
 const jwt = require('jsonwebtoken');
 const User = require('../schemas/user');
+const multer = require('multer');
+const fs = require('fs');
 
 const router = express.Router();
+
+try {
+  fs.readdirSync('uploads');
+} catch (e) {
+  console.error('uploads 폴더 생성');
+  fs.mkdirSync('uploads');
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename(req, file, cb) {
+      cb(null, file.originalname);
+    },
+  }),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
+
+router.post('/image', upload.single('image'), (req, res, next) => {
+  try {
+    res.send(`/img/${req.file.filename}`);
+    console.log(req.file);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
 
 router.post('/', isLoggedIn, async (req, res, next) => {
   try {
