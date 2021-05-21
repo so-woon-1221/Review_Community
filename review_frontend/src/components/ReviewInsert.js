@@ -150,8 +150,6 @@ const ReviewInsert = ({
   };
 
   const sendImage = async (img) => {
-    // const resize = await resizeImage(img);
-    // console.log(resize);
     const formData = new FormData();
     formData.append('image', img);
     const result = await axios.post('/review/image', formData, {

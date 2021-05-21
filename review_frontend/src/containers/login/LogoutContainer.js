@@ -11,10 +11,11 @@ const LogoutContainer = ({ history }) => {
       dispatch(logoutUser());
       localStorage.removeItem('user');
       history.push('/');
+      window.location.reload();
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [dispatch, history]);
 
   return <div></div>;
 };
