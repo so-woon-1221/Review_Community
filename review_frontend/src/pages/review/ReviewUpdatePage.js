@@ -1,7 +1,7 @@
 import React from 'react';
-import HeaderContainer from '../containers/HeaderContainer';
-import ReviewUpdateContainer from '../containers/ReviweUpdateContainer';
-import Footer from '../components/common/Footer';
+import HeaderContainer from '../../containers/HeaderContainer';
+import ReviewUpdateContainer from '../../containers/review/ReviweUpdateContainer';
+import Footer from '../../components/common/Footer';
 
 const ReviewUpdatePage = () => {
   return (

@@ -1,12 +1,12 @@
 import React from 'react';
 import IndexPage from './pages/IndexPage';
-import ReviewListPage from './pages/ReviewListPage';
-import ReviewInsertPage from './pages/ReviewInsertPage';
+import ReviewListPage from './pages/review/ReviewListPage';
+import ReviewInsertPage from './pages/review/ReviewInsertPage';
 import LoginPage from './pages/LoginPage';
 import LogoutContainer from './containers/login/LogoutContainer';
 import RegisterPage from './pages/RegisterPage';
-import ReviewPage from './pages/ReviewPage';
-import ReviewUpdatePage from './pages/ReviewUpdatePage';
+import ReviewPage from './pages/review/ReviewPage';
+import ReviewUpdatePage from './pages/review/ReviewUpdatePage';
 import QuestionPage from './pages/QuestionPage';
 import { Route } from 'react-router-dom';
 import BoardPage from './pages/BoardPage';

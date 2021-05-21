@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReviewContent from '../components/ReviewContent';
+import ReviewContent from '../../components/review/ReviewContent';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { get } from '../modules/review';
 

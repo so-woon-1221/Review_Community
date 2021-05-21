@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import ReviewUpdate from '../components/ReviewUpdate';
+import ReviewUpdate from '../../components/review/ReviewUpdate';
 
 const ReviewUpdateContainer = ({ match, history }) => {
   const [review, setReview] = useState(null);

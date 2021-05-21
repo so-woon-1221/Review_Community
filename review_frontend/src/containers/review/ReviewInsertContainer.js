@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
-import ReviewInsert from '../components/ReviewInsert';
+import ReviewInsert from '../../components/review/ReviewInsert';
 import { useSelector, useDispatch } from 'react-redux';
-import { insert, changeField, initialize } from '../modules/review';
+import { insert, changeField, initialize } from '../../modules/review';
 import { withRouter } from 'react-router-dom';
 
 const ReviewInsertContainer = ({ history }) => {

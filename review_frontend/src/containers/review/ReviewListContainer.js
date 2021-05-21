@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
-import ReviewContent from '../components/ReviewContent';
+import ReviewContent from '../../components/review/ReviewContent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
