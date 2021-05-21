@@ -29,6 +29,10 @@ const StyledLink = styled(Link)`
     background: #171c26;
     color: #a7c0f2;
   }
+
+  @media screen and (max-width: 768px) {
+    margin-right: 0;
+  }
 `;
 
 const BoardBlock = styled.div`
@@ -233,14 +237,14 @@ const Board = ({
       <BoardBlock>
         {count > 0 ? (
           boards.map((board) => (
-            <BoardWrapper key={board._id} to={`/board/${board._id}`}>
+            <BoardWrapper key={board._id} to={`/board/question/${board._id}`}>
               {board.thumbnail ? (
                 <BoardImage
                   style={{ backgroundImage: `url(${board.thumbnail})` }}
                 />
               ) : (
                 <BoardImage
-                  style={{ backgroundImage: `url('forbidden.png')` }}
+                  style={{ backgroundImage: `url('forbidden.jpeg')` }}
                 />
               )}
               <BoardContent>

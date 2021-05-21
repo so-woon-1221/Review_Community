@@ -18,7 +18,8 @@ const boardSchema = new Schema({
     required: true,
   },
   comment: {
-    type: Array(String),
+    type: Array(ObjectId),
+    ref: 'Comment',
   },
   author: {
     type: ObjectId,

@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import ReviewPage from './pages/review/ReviewPage';
 import ReviewUpdatePage from './pages/review/ReviewUpdatePage';
 import QuestionPage from './pages/QuestionPage';
+import QuestionViewPage from './pages/QuestionViewPage';
 import { Route } from 'react-router-dom';
 import BoardPage from './pages/BoardPage';
 
@@ -18,7 +19,8 @@ const App = () => {
       <Route path={'/reviews'} component={ReviewListPage} exact={true} />
       <Route path={'/reviews/:id'} component={ReviewPage} />
       <Route path={'/board'} component={BoardPage} exact={true} />
-      <Route path={'/board/question'} component={QuestionPage} />
+      <Route path={'/board/question/:id'} component={QuestionViewPage} />
+      <Route path={'/board/question'} component={QuestionPage} exact={true} />
       <Route path={'/review'} component={ReviewInsertPage} exact={true} />
       <Route path={'/review/:id'} component={ReviewUpdatePage} />
       <Route path={'/login'} component={LoginPage} />

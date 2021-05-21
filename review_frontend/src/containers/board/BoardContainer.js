@@ -34,6 +34,9 @@ const BoardContainer = ({ location }) => {
     if (query.sort) {
       dispatch(changeValue({ key: 'sort', value: query.sort }));
     }
+    return () => {
+      dispatch(resetSearch());
+    };
   }, [location.search, dispatch]);
 
   const onChangeSearch = useCallback(

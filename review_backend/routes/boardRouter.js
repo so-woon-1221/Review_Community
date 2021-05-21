@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
     filter.category = category;
   }
   if (sort === 'comment') {
-    sorted = { 'comment.length': -1 };
+    sorted = { comment: -1 };
   }
   if (search) {
     const exUser = await User.findOne({ name: search });
@@ -35,7 +35,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/question', async (req, res, next) => {
   try {
     const { title, content, author } = req.body;
     const question = (
@@ -45,6 +45,44 @@ router.post('/', async (req, res, next) => {
         author,
       })
     ).populate('author');
+    res.send(question);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.get('/question/:id', async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const question = await Board.findOne({ _id: id })
+      .populate('author')
+      .populate('comment');
+    res.send(question);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.patch('/question/:id/comment', async (req, res, next) => {
+  const id = req.params.id;
+  const comment = req.body.commentId;
+  let question = '';
+  try {
+    question = await Board.findOne({ _id: id })
+      .populate('author')
+      .populate('comment');
+    const newComment = question.comment;
+    console.log(newComment);
+    newComment.push(comment);
+    question = await Board.findOneAndUpdate(
+      { _id: id },
+      { comment: newComment },
+      { new: true },
+    )
+      .populate('author')
+      .populate('comment');
     res.send(question);
   } catch (e) {
     console.error(e);
