@@ -48,7 +48,6 @@ const ReviewHeader = styled.div`
   position: relative;
   background: no-repeat center center;
   background-size: cover;
-  background-attachment: scroll;
   transform: translateY(-25px);
   box-sizing: border-box;
   color: white;
@@ -91,6 +90,11 @@ const ReviewHeader = styled.div`
     margin: 0 20px;
     padding: 0;
     cursor: pointer;
+  }
+
+  @media screen and (max-width: 768px) {
+    height: 350px;
+    padding-top: 15px;
   }
 `;
 

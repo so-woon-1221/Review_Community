@@ -39,6 +39,10 @@ const StyledLink = styled(Link)`
     background: #171c26;
     color: #a7c0f2;
   }
+
+  @media screen and (max-width: 768px) {
+    margin-right: 0;
+  }
 `;
 
 const CategoryBlock = styled.div`

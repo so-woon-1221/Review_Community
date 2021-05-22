@@ -22,6 +22,10 @@ const EditorBlock = styled.div`
   .subtitle {
     font-size: 1.5rem;
   }
+
+  @media screen and (max-width: 768px) {
+    padding: 20px 5%;
+  }
 `;
 
 const CategoryWrapper = styled.div`
