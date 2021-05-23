@@ -1,6 +1,7 @@
 const express = require('express');
 const Board = require('../schemas/board');
 const User = require('../schemas/user');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -58,7 +59,13 @@ router.get('/question/:id', async (req, res, next) => {
     const question = await Board.findOne({ _id: id })
       .populate('author')
       .populate('comment');
-    res.send(question);
+    const token = req.cookies['access_token'];
+    let user = '';
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      user = await User.findOne({ email: decoded.email });
+    }
+    res.send({ question, user });
   } catch (e) {
     console.error(e);
     next(e);
@@ -83,7 +90,13 @@ router.patch('/question/:id/comment', async (req, res, next) => {
     )
       .populate('author')
       .populate('comment');
-    res.send(question);
+    let user = '';
+    const token = req.cookies['access_token'];
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      user = await User.findOne({ email: decoded.email });
+    }
+    res.send({ question, user });
   } catch (e) {
     console.error(e);
     next(e);

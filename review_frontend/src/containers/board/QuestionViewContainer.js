@@ -6,7 +6,12 @@ import {
   postComment,
   resetComment,
 } from '../../modules/question';
-import { setContent, writeComment, initialize } from '../../modules/comment';
+import {
+  setContent,
+  writeComment,
+  initialize,
+  deleteComment,
+} from '../../modules/comment';
 import { withRouter } from 'react-router-dom';
 import QuestionView from '../../components/board/QuestionView';
 
@@ -18,6 +23,8 @@ const QuestionViewContainer = ({ match }) => {
     comment,
     commentError,
     content,
+    deleteResult,
+    deleteError,
   } = useSelector(({ question, comment, loading }) => ({
     question: question.question,
     questionError: question.error,
@@ -28,13 +35,15 @@ const QuestionViewContainer = ({ match }) => {
     // 질문의 댓글의 내용
     content: comment.content,
     commentError: comment.error,
+    deleteResult: comment.deleteResult,
+    deleteError: comment.deleteError,
   }));
   const dispatch = useDispatch();
 
   useEffect(() => {
     const id = match.params.id;
     dispatch(getQuestion({ id }));
-  }, [dispatch, match.params.id]);
+  }, [dispatch, match.params.id, deleteResult]);
 
   const onChangeContent = useCallback(
     (payload) => {
@@ -62,17 +71,28 @@ const QuestionViewContainer = ({ match }) => {
       dispatch(resetComment());
       dispatch(initialize());
     };
-  }, []);
+  }, [dispatch]);
+
+  const onDeleteComment = (e) => {
+    if (e.target.dataset.name) {
+      const id = e.target.dataset.name;
+      dispatch(deleteComment({ id }));
+      console.log(deleteResult);
+    }
+  };
 
   return (
     question && (
       <QuestionView
-        question={question}
+        question={question.question}
+        user={question.user}
         comment={comment}
         commentId={commentId}
         onChangeContent={onChangeContent}
         commentContent={content}
         onWrite={onWrite}
+        onDeleteComment={onDeleteComment}
+        deleteResult={deleteResult}
       />
     )
   );
