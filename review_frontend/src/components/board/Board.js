@@ -38,7 +38,6 @@ const StyledLink = styled(Link)`
 const BoardBlock = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   box-sizing: border-box;
   border-top: 1px solid #dddddd;
   padding-top: 10px;
@@ -48,6 +47,7 @@ const BoardWrapper = styled(Link)`
   width: 30%;
   text-decoration: none;
   color: black;
+  margin-right: 5%;
   @media screen and (max-width: 768px) {
     width: 100%;
     display: flex;
@@ -57,6 +57,9 @@ const BoardWrapper = styled(Link)`
       margin-bottom: 0;
     }
     border-bottom: 1px solid #dddddd;
+  }
+  &:nth-child(3n) {
+    margin-right: 0;
   }
 `;
 

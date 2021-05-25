@@ -38,12 +38,20 @@ router.get('/', async (req, res, next) => {
 
 router.post('/question', async (req, res, next) => {
   try {
-    const { title, content, author } = req.body;
+    const { title, content, category, thumbnail } = req.body;
+    const token = req.cookies['access_token'];
+    let user = '';
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      user = await User.findOne({ email: decoded.email });
+    }
     const question = (
       await Board.create({
         title,
         content,
-        author,
+        category,
+        thumbnail,
+        author: user._id,
       })
     ).populate('author');
     res.send(question);

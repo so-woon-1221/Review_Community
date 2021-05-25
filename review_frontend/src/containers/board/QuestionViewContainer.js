@@ -5,6 +5,7 @@ import {
   setComment,
   postComment,
   resetComment,
+  initializeQuestion,
 } from '../../modules/question';
 import {
   setContent,
@@ -70,6 +71,7 @@ const QuestionViewContainer = ({ match }) => {
     return () => {
       dispatch(resetComment());
       dispatch(initialize());
+      dispatch(initializeQuestion());
     };
   }, [dispatch]);
 
