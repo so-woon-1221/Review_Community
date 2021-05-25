@@ -147,8 +147,19 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
     }
   }, [category, review, thumbnail, user._id]);
 
+  const bodyContent = useRef(null);
+
+  useEffect(() => {
+    if (
+      bodyContent.current.clientHeight <= document.documentElement.clientHeight
+    ) {
+      bodyContent.current.style.minHeight =
+        document.documentElement.clientHeight - 170 + 'px';
+    }
+  }, []);
+
   return (
-    <>
+    <div ref={bodyContent}>
       <ReviewHeader ref={header}>
         <div />
         <h1>{title}</h1>
@@ -185,7 +196,7 @@ const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
           </ButtonBlock>
         )}
       </ReviewBlock>
-    </>
+    </div>
   );
 };
 

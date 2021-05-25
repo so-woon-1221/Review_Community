@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Viewer } from '@toast-ui/react-editor';
@@ -134,8 +134,20 @@ const QuestionView = ({
     const dateSet = date.split('T');
     return dateSet[0].substr(0, 10) + ' ' + dateSet[1].substr(0, 8);
   };
+
+  const bodyContent = useRef(null);
+
+  useEffect(() => {
+    if (
+      bodyContent.current.clientHeight <= document.documentElement.clientHeight
+    ) {
+      bodyContent.current.style.minHeight =
+        document.documentElement.clientHeight - 170 + 'px';
+    }
+  }, []);
+
   return (
-    <Block>
+    <Block ref={bodyContent}>
       <QuestionHeader>
         <div>
           <h2>{title}</h2>

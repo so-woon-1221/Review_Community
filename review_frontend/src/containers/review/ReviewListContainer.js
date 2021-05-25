@@ -67,8 +67,7 @@ const CategoryBlock = styled.div`
   }
 `;
 const SortBlock = styled.div`
-  border-bottom: 1px solid #dddddd;
-  padding-bottom: 10px;
+  //padding-bottom: 10px;
 `;
 
 const SearchBlock = styled.div`
@@ -76,8 +75,9 @@ const SearchBlock = styled.div`
   align-items: center;
   margin-top: 20px;
   width: 100%;
-  height: 40px;
   box-sizing: border-box;
+  //border-bottom: 1px solid #dddddd;
+  //padding-bottom: 10px;
 `;
 
 const SearchWrapper = styled.div`
@@ -104,7 +104,7 @@ const SearchWrapper = styled.div`
 const AuthorWrapper = styled.div`
   display: block;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 20px;
 
   svg:hover {
     color: red;
@@ -117,7 +117,8 @@ const BlackLink = styled(Link)`
 `;
 
 const PageBlock = styled.div`
-  margin-left: 20px;
+  margin-top: 20px;
+  //margin-left: 20px;
 `;
 
 const ReviewListContainer = ({ location }) => {
@@ -165,7 +166,7 @@ const ReviewListContainer = ({ location }) => {
 
   const onClickSearch = () => {
     fetch(
-      `/reviews/?category=${nowCategory}&sort=${sort}&search=${search}${author}`,
+      `/reviews/?category=${nowCategory}&sort=${sort}&search=${search}${author}&page=${page}`,
     )
       .then((response) => response.json())
       .then((result) => {
@@ -297,14 +298,6 @@ const ReviewListContainer = ({ location }) => {
           </AuthorWrapper>
         )}
       </SortBlock>
-      {reviews &&
-        (reviews === '검색 결과 없음' ? (
-          <AuthorWrapper>검색결과 없음</AuthorWrapper>
-        ) : (
-          reviews.map((review) => (
-            <ReviewContent key={review._id} review={review} />
-          ))
-        ))}
       <SearchBlock>
         <SearchWrapper>
           <input
@@ -321,31 +314,39 @@ const ReviewListContainer = ({ location }) => {
           />
           <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
         </SearchWrapper>
-        {count > 1 && (
-          <PageBlock>
-            {page > 1 && (
-              <StyledLink
-                className={'clicked'}
-                to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
-                  +page - 1
-                }${author}`}
-              >
-                이전
-              </StyledLink>
-            )}
-            {page < Math.ceil(count / 10) && (
-              <StyledLink
-                className={'clicked'}
-                to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
-                  +page + 1
-                }${author}`}
-              >
-                다음
-              </StyledLink>
-            )}
-          </PageBlock>
-        )}
       </SearchBlock>
+      {reviews &&
+        (reviews === '검색 결과 없음' ? (
+          <AuthorWrapper>검색결과 없음</AuthorWrapper>
+        ) : (
+          reviews.map((review) => (
+            <ReviewContent key={review._id} review={review} />
+          ))
+        ))}
+      {count > 1 && (
+        <PageBlock>
+          {page > 1 && (
+            <StyledLink
+              className={'clicked'}
+              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
+                +page - 1
+              }${author}`}
+            >
+              이전
+            </StyledLink>
+          )}
+          {page < Math.ceil(count / 10) && (
+            <StyledLink
+              className={'clicked'}
+              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
+                +page + 1
+              }${author}`}
+            >
+              다음
+            </StyledLink>
+          )}
+        </PageBlock>
+      )}
     </ContentBlock>
   );
 };

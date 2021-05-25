@@ -40,7 +40,7 @@ const BoardBlock = styled.div`
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
-  border-top: 1px solid #dddddd;
+  //border-top: 1px solid #dddddd;
   padding-top: 10px;
 `;
 
@@ -50,18 +50,21 @@ const BoardWrapper = styled(Link)`
   color: black;
   margin-right: 5%;
   min-height: 200px;
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+
   @media screen and (max-width: 768px) {
     width: 100%;
     display: flex;
     margin-bottom: 10px;
     padding-bottom: 10px;
+    margin-right: 0;
     &:last-child {
       margin-bottom: 0;
     }
     border-bottom: 1px solid #dddddd;
-  }
-  &:nth-child(3n) {
-    margin-right: 0;
   }
 `;
 
@@ -75,15 +78,15 @@ const BoardImage = styled.div`
   img {
     width: 100%;
   }
+
   @media screen and (max-width: 768px) {
-    width: 50%;
+    width: 40%;
     height: auto;
   }
 `;
 
 const BoardContent = styled.div`
   margin: 10px 0;
-  //height: 100px;
   h3 {
     margin: 10px 0 0 0;
   }
@@ -92,6 +95,7 @@ const BoardContent = styled.div`
   }
   @media screen and (max-width: 768px) {
     margin: 0 0 0 20px;
+    width: 60%;
   }
 `;
 
@@ -115,19 +119,21 @@ const CategoryBlock = styled.div`
     }
   }
 `;
-const SortBlock = styled.div`
-  margin-bottom: 10px;
-`;
+// const SortBlock = styled.div`
+//   margin-bottom: 15px;
+// `;
 
 const SearchBlock = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
   div {
-    &:first-child {
-      flex: 1;
-    }
+    width: 100%;
+    display: flex;
+    align-items: center;
   }
   input {
+    flex: 1;
     border: none;
     border-bottom: 1px solid #dddddd;
     margin-right: 20px;
@@ -136,10 +142,6 @@ const SearchBlock = styled.div`
   }
   svg {
     font-size: 20px;
-  }
-
-  @media screen and (max-width: 768px) {
-    margin-top: 10px;
   }
 `;
 
@@ -224,32 +226,51 @@ const Board = ({
           ))}
         </ul>
       </CategoryBlock>
-      <SortBlock>
-        {sort === 'latest' ? (
-          <StyledLink
-            to={`/board?category=${nowCategory}&sort=latest`}
-            className={'clicked'}
-          >
-            최신순
-          </StyledLink>
-        ) : (
-          <StyledLink to={`/board?category=${nowCategory}&sort=latest`}>
-            최신순
-          </StyledLink>
-        )}
-        {/*{sort === 'comment' ? (*/}
-        {/*  <StyledLink*/}
-        {/*    to={`/board?category=${nowCategory}&sort=comment`}*/}
-        {/*    className={'clicked'}*/}
-        {/*  >*/}
-        {/*    댓글순*/}
-        {/*  </StyledLink>*/}
-        {/*) : (*/}
-        {/*  <StyledLink to={`/board?category=${nowCategory}&sort=comment`}>*/}
-        {/*    댓글순*/}
-        {/*  </StyledLink>*/}
-        {/*)}*/}
-      </SortBlock>
+      {/*<SortBlock>*/}
+      {/*  {sort === 'latest' ? (*/}
+      {/*    <StyledLink*/}
+      {/*      to={`/board?category=${nowCategory}&sort=latest`}*/}
+      {/*      className={'clicked'}*/}
+      {/*    >*/}
+      {/*      최신순*/}
+      {/*    </StyledLink>*/}
+      {/*  ) : (*/}
+      {/*    <StyledLink to={`/board?category=${nowCategory}&sort=latest`}>*/}
+      {/*      최신순*/}
+      {/*    </StyledLink>*/}
+      {/*  )}*/}
+      {/*  {sort === 'comment' ? (*/}
+      {/*    <StyledLink*/}
+      {/*      to={`/board?category=${nowCategory}&sort=comment`}*/}
+      {/*      className={'clicked'}*/}
+      {/*    >*/}
+      {/*      댓글순*/}
+      {/*    </StyledLink>*/}
+      {/*  ) : (*/}
+      {/*    <StyledLink to={`/board?category=${nowCategory}&sort=comment`}>*/}
+      {/*      댓글순*/}
+      {/*    </StyledLink>*/}
+      {/*  )}*/}
+      {/*</SortBlock>*/}
+      <SearchBlock>
+        <div>
+          <input
+            type={'text'}
+            placeholder={'검색'}
+            value={search}
+            onChange={(e) =>
+              onChangeSearch({ key: 'search', value: e.target.value })
+            }
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                onSearch();
+              }
+            }}
+            onClick={reset}
+          />
+          <FontAwesomeIcon icon={faSearch} onClick={onSearch} />
+        </div>
+      </SearchBlock>
       <BoardBlock>
         {count > 0 ? (
           boards.map((board) => (
@@ -276,26 +297,6 @@ const Board = ({
           <BoardWrapper>검색결과 없음</BoardWrapper>
         )}
       </BoardBlock>
-      <SearchBlock>
-        <div />
-        <div>
-          <input
-            type={'text'}
-            placeholder={'검색'}
-            value={search}
-            onChange={(e) =>
-              onChangeSearch({ key: 'search', value: e.target.value })
-            }
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                onSearch();
-              }
-            }}
-            onClick={reset}
-          />
-          <FontAwesomeIcon icon={faSearch} onClick={onSearch} />
-        </div>
-      </SearchBlock>
     </Block>
   );
 };
