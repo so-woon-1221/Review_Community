@@ -8,8 +8,15 @@ const router = express.Router();
 
 router.get('/index', async (req, res, next) => {
   let reviews = '';
+  let { limit } = req.query;
+  if (!limit) {
+    limit = 10;
+  }
   try {
-    reviews = await Review.find({}).populate('author').sort({ recommend: -1 });
+    reviews = await Review.find({})
+      .populate('author')
+      .sort({ recommend: -1 })
+      .limit(+limit);
     const token = req.cookies['access_token'];
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);

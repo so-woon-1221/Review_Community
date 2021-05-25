@@ -24,13 +24,32 @@ const HotReviewContainer = () => {
     fetch('/index')
       .then((response) => response.json())
       .then((result) => {
-        // console.log(result);
         setReviews(result.reviews);
         if (result.user) {
           localStorage.setItem('user', result.user._id);
         }
       });
   }, []);
+
+  const limit = 10;
+  let newLimit = limit;
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      if (
+        document.documentElement.clientHeight +
+          document.documentElement.scrollTop ===
+        document.body.scrollHeight
+      ) {
+        newLimit = newLimit + limit;
+        console.log(newLimit);
+        fetch(`/index?limit=${newLimit}`)
+          .then((response) => response.json())
+          .then((result) => {
+            setReviews(result.reviews);
+          });
+      }
+    });
+  }, [newLimit]);
 
   return (
     <ContentBlock>

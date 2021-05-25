@@ -18,15 +18,18 @@ export const changeValue = createAction(CHANGE_VALUE, ({ key, value }) => ({
 export const resetSearch = createAction(RESET_SEARCH);
 export const getBoard = createAction(
   GET_BOARD,
-  ({ category, sort, search }) => ({
+  ({ category, sort, search, limit }) => ({
     category,
     sort,
     search,
+    limit,
   }),
 );
 
-const getBoardApi = ({ category, sort, search }) =>
-  axios.get(`/board?category=${category}&sort=${sort}&search=${search}`);
+const getBoardApi = ({ category, sort, search, limit }) =>
+  axios.get(
+    `/board?category=${category}&sort=${sort}&search=${search}&limit=${limit}`,
+  );
 const getBoardSaga = createRequestSaga(GET_BOARD, getBoardApi);
 
 export function* boardSaga() {

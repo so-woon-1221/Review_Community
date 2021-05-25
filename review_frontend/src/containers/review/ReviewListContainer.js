@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -9,8 +9,6 @@ import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
-  //display: flex;
-  //flex-wrap: wrap;
   h2 {
     margin: 0;
   }
@@ -26,6 +24,7 @@ const StyledLink = styled(Link)`
   padding: 5px 10px;
   border-radius: 5px;
   margin-right: 10px;
+
   &:hover {
     cursor: pointer;
   }
@@ -35,9 +34,8 @@ const StyledLink = styled(Link)`
     color: #a7c0f2;
   }
 
-  &.write:hover {
-    background: #171c26;
-    color: #a7c0f2;
+  &:last-child {
+    margin-right: 0;
   }
 
   @media screen and (max-width: 768px) {
@@ -52,13 +50,16 @@ const CategoryBlock = styled.div`
     padding: 0;
     flex-wrap: wrap;
   }
+
   div {
     display: flex;
     margin: 0;
+
     h2 {
       flex: 1;
     }
   }
+
   @media screen and (max-width: 768px) {
     li {
       margin-bottom: 10px;
@@ -77,14 +78,11 @@ const SearchBlock = styled.div`
   width: 100%;
   height: 40px;
   box-sizing: border-box;
-
-  div {
-    flex: 1;
-  }
 `;
 
 const SearchWrapper = styled.div`
   display: flex;
+  flex: 1;
   input {
     border: none;
     border-bottom: 1px solid #dddddd;
@@ -98,6 +96,8 @@ const SearchWrapper = styled.div`
     cursor: pointer;
     height: 40px;
     font-size: 20px;
+    padding: 0;
+    margin: 0;
   }
 `;
 
@@ -114,6 +114,10 @@ const AuthorWrapper = styled.div`
 const BlackLink = styled(Link)`
   color: black;
   text-decoration: none;
+`;
+
+const PageBlock = styled.div`
+  margin-left: 20px;
 `;
 
 const ReviewListContainer = ({ location }) => {
@@ -153,8 +157,11 @@ const ReviewListContainer = ({ location }) => {
   const [search, setSearch] = useState('');
   const [author, setAuthor] = useState('');
   const [name, setName] = useState('');
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
   const latest = useRef(null);
   const recommend = useRef(null);
+  const bodyContent = useRef(null);
 
   const onClickSearch = () => {
     fetch(
@@ -184,6 +191,11 @@ const ReviewListContainer = ({ location }) => {
     } else {
       setAuthor('');
     }
+    if (!query.page) {
+      setPage(1);
+    } else {
+      setPage(query.page);
+    }
     setNowCategory(query.category);
     setSort(query.sort);
 
@@ -203,9 +215,10 @@ const ReviewListContainer = ({ location }) => {
       }
     }
   }, [author, location.search, nowCategory, sort]);
+
   useEffect(() => {
     fetch(
-      `/reviews?category=${nowCategory}&sort=${sort}${author}&search=${search}`,
+      `/reviews?category=${nowCategory}&sort=${sort}${author}&search=${search}&page=${page}`,
     )
       .then((response) => response.json())
       .then((result) => {
@@ -216,11 +229,22 @@ const ReviewListContainer = ({ location }) => {
         if (result.user) {
           localStorage.setItem('user', result.user._id);
         }
+        if (result.count) {
+          setCount(result.count);
+        } else {
+          setCount(0);
+        }
       });
-  }, [author, nowCategory, sort]);
+    if (
+      bodyContent.current.clientHeight <= document.documentElement.clientHeight
+    ) {
+      bodyContent.current.style.minHeight =
+        document.documentElement.clientHeight - 170 + 'px';
+    }
+  }, [author, nowCategory, sort, page]);
 
   return (
-    <ContentBlock>
+    <ContentBlock ref={bodyContent}>
       <CategoryBlock>
         <div>
           <h2>카테고리</h2>
@@ -282,7 +306,6 @@ const ReviewListContainer = ({ location }) => {
           ))
         ))}
       <SearchBlock>
-        <div />
         <SearchWrapper>
           <input
             type={'text'}
@@ -298,6 +321,30 @@ const ReviewListContainer = ({ location }) => {
           />
           <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
         </SearchWrapper>
+        {count > 1 && (
+          <PageBlock>
+            {page > 1 && (
+              <StyledLink
+                className={'clicked'}
+                to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
+                  +page - 1
+                }${author}`}
+              >
+                이전
+              </StyledLink>
+            )}
+            {page < Math.ceil(count / 10) && (
+              <StyledLink
+                className={'clicked'}
+                to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
+                  +page + 1
+                }${author}`}
+              >
+                다음
+              </StyledLink>
+            )}
+          </PageBlock>
+        )}
       </SearchBlock>
     </ContentBlock>
   );

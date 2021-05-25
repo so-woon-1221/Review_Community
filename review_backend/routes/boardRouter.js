@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
-  const { category, sort, search } = req.query;
+  let { category, sort, search, limit } = req.query;
   let filter = {};
   let sorted = { createdAt: -1 };
   if (category !== 'all') {
@@ -23,10 +23,16 @@ router.get('/', async (req, res, next) => {
       filter.$text = { $search: search };
     }
   }
+  if (!limit) {
+    limit = 9;
+  }
   try {
     const count = await Board.find(filter).count();
     if (count > 0) {
-      const board = await Board.find(filter).sort(sorted).populate('author');
+      const board = await Board.find(filter)
+        .sort(sorted)
+        .populate('author')
+        .limit(+limit);
       return res.send({ count, board });
     }
     return res.send({ count });

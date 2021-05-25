@@ -22,7 +22,13 @@ const QuestionContainer = ({ history }) => {
   const dispatch = useDispatch();
 
   const onPostQuestion = () => {
-    dispatch(postQuestion({ title, content, thumbnail, category }));
+    if (title === '') {
+      alert('제목을 입력하세요');
+    } else if (content === '') {
+      alert('내용을 입력하세요');
+    } else {
+      dispatch(postQuestion({ title, content, thumbnail, category }));
+    }
   };
 
   const onChangeValue = (payload) => {

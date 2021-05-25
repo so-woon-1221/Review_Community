@@ -1,15 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 
 const FooterBlock = styled.div`
-  height: 50px;
-  //padding: 20px 15%;
-  //margin-top: 20px;
   border-top: 1px solid #dddddd;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  //line-height: 4;
+  div {
+    width: 100%;
+    text-align: center;
+  }
+  svg {
+    margin-right: 5px;
+  }
 `;
 
 const Footer = () => {
-  return <FooterBlock />;
+  return (
+    <FooterBlock>
+      <div>
+        <FontAwesomeIcon icon={faCopyright} />
+        Made by Sowoon
+      </div>
+    </FooterBlock>
+  );
 };
 
 export default Footer;

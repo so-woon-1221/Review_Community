@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeValue, getBoard, resetSearch } from '../../modules/board';
 import Board from '../../components/board/Board';
@@ -18,13 +18,27 @@ const BoardContainer = ({ location }) => {
     search: board.search,
   }));
   const dispatch = useDispatch();
+  const [limit, setLimit] = useState(9);
+  const count = 9;
+
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      if (
+        document.documentElement.clientHeight +
+          document.documentElement.scrollTop ===
+        document.body.scrollHeight
+      ) {
+        setLimit(limit + count);
+      }
+    });
+  }, [limit]);
 
   useEffect(() => {
     const getBoards = async () => {
-      dispatch(getBoard({ category, sort, search }));
+      dispatch(getBoard({ category, sort, search, limit }));
     };
     getBoards().then(() => {});
-  }, [category, dispatch, sort]);
+  }, [category, dispatch, sort, limit]);
 
   useEffect(() => {
     const query = queryString.parse(location.search);
@@ -47,7 +61,7 @@ const BoardContainer = ({ location }) => {
   );
 
   const onSearch = () => {
-    dispatch(getBoard({ category, sort, search }));
+    dispatch(getBoard({ category, sort, search, limit }));
   };
 
   const reset = () => {

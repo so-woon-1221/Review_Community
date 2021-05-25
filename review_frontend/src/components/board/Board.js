@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { withRouter } from 'react-router-dom';
 
 const Block = styled.div`
   padding: 20px 15%;
@@ -48,6 +49,7 @@ const BoardWrapper = styled(Link)`
   text-decoration: none;
   color: black;
   margin-right: 5%;
+  min-height: 200px;
   @media screen and (max-width: 768px) {
     width: 100%;
     display: flex;
@@ -150,6 +152,7 @@ const Board = ({
   onChangeSearch,
   onSearch,
   reset,
+  location,
 }) => {
   const categories = [
     {
@@ -180,9 +183,19 @@ const Board = ({
   const createDate = (date) => {
     return date.substr(0, 10);
   };
+  const bodyContent = useRef(null);
+
+  useEffect(() => {
+    if (
+      bodyContent.current.clientHeight <= document.documentElement.clientHeight
+    ) {
+      bodyContent.current.style.minHeight =
+        document.documentElement.clientHeight - 170 + 'px';
+    }
+  }, [location]);
 
   return (
-    <Block>
+    <Block ref={bodyContent}>
       <CategoryBlock>
         <div>
           <h2>카테고리</h2>
@@ -224,18 +237,18 @@ const Board = ({
             최신순
           </StyledLink>
         )}
-        {sort === 'comment' ? (
-          <StyledLink
-            to={`/board?category=${nowCategory}&sort=comment`}
-            className={'clicked'}
-          >
-            댓글순
-          </StyledLink>
-        ) : (
-          <StyledLink to={`/board?category=${nowCategory}&sort=comment`}>
-            댓글순
-          </StyledLink>
-        )}
+        {/*{sort === 'comment' ? (*/}
+        {/*  <StyledLink*/}
+        {/*    to={`/board?category=${nowCategory}&sort=comment`}*/}
+        {/*    className={'clicked'}*/}
+        {/*  >*/}
+        {/*    댓글순*/}
+        {/*  </StyledLink>*/}
+        {/*) : (*/}
+        {/*  <StyledLink to={`/board?category=${nowCategory}&sort=comment`}>*/}
+        {/*    댓글순*/}
+        {/*  </StyledLink>*/}
+        {/*)}*/}
       </SortBlock>
       <BoardBlock>
         {count > 0 ? (
@@ -287,4 +300,4 @@ const Board = ({
   );
 };
 
-export default Board;
+export default withRouter(Board);
