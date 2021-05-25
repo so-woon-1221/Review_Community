@@ -80,8 +80,8 @@ const BoardImage = styled.div`
 `;
 
 const BoardContent = styled.div`
-  margin: 10px 0 0 0;
-  height: 100px;
+  margin: 10px 0;
+  //height: 100px;
   h3 {
     margin: 10px 0 0 0;
   }

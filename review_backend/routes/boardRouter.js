@@ -80,6 +80,17 @@ router.get('/question/:id', async (req, res, next) => {
   }
 });
 
+router.delete('/question/:id', async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const result = await Board.findOneAndDelete({ _id: id });
+    res.send(result);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 router.patch('/question/:id/comment', async (req, res, next) => {
   const id = req.params.id;
   const comment = req.body.commentId;

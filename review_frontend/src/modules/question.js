@@ -11,6 +11,9 @@ const POST_QUESTION_FAILURE = 'question/POST_QUESTION_FAILURE';
 const GET_QUESTION = 'question/GET_QUESTION';
 const GET_QUESTION_SUCCESS = 'question/GET_QUESTION_SUCCESS';
 const GET_QUESTION_FAILURE = 'question/GET_QUESTION_FAILURE';
+const DELETE_QUESTION = 'question/DELETE_QUESTION';
+const DELETE_QUESTION_SUCCESS = 'question/DELETE_QUESTION_SUCCESS';
+const DELETE_QUESTION_FAILURE = 'question/DELETE_QUESTION_FAILURE';
 const SET_COMMENT = 'question/SET_COMMENT';
 const POST_COMMENT = 'question/POST_COMMENT';
 const POST_COMMENT_SUCCESS = 'question/POST_COMMENT_SUCCESS';
@@ -32,6 +35,9 @@ export const postQuestion = createAction(
   }),
 );
 export const getQuestion = createAction(GET_QUESTION, ({ id }) => ({ id }));
+export const deleteQuestion = createAction(DELETE_QUESTION, ({ id }) => ({
+  id,
+}));
 export const setComment = createAction(SET_COMMENT, ({ key, value }) => ({
   key,
   value,
@@ -54,6 +60,12 @@ const postQuestionSaga = createRequestSaga(POST_QUESTION, postQuestionApi);
 const getQuestionApi = ({ id }) => axios.get(`/board/question/${id}`);
 const getQuestionSaga = createRequestSaga(GET_QUESTION, getQuestionApi);
 
+const deleteQuestionApi = ({ id }) => axios.delete(`/board/question/${id}`);
+const deleteQuestionSaga = createRequestSaga(
+  DELETE_QUESTION,
+  deleteQuestionApi,
+);
+
 const postCommentApi = ({ id, commentId }) =>
   axios.patch(`/board/question/${id}/comment`, { commentId });
 const postCommentSaga = createRequestSaga(POST_COMMENT, postCommentApi);
@@ -62,6 +74,7 @@ export function* questionSaga() {
   yield takeLatest(GET_QUESTION, getQuestionSaga);
   yield takeLatest(POST_COMMENT, postCommentSaga);
   yield takeLatest(POST_QUESTION, postQuestionSaga);
+  yield takeLatest(DELETE_QUESTION, deleteQuestionSaga);
 }
 
 const initialState = {
@@ -72,6 +85,7 @@ const initialState = {
   question: '',
   error: '',
   commentId: '',
+  deletedQuestion: '',
 };
 
 const question = handleActions(
@@ -94,6 +108,14 @@ const question = handleActions(
       question,
     }),
     [GET_QUESTION_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
+    }),
+    [DELETE_QUESTION_SUCCESS]: (state, { payload: deletedQuestion }) => ({
+      ...state,
+      deletedQuestion,
+    }),
+    [DELETE_QUESTION_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
     }),

@@ -6,6 +6,7 @@ import {
   postComment,
   resetComment,
   initializeQuestion,
+  deleteQuestion,
 } from '../../modules/question';
 import {
   setContent,
@@ -16,7 +17,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import QuestionView from '../../components/board/QuestionView';
 
-const QuestionViewContainer = ({ match }) => {
+const QuestionViewContainer = ({ match, history }) => {
   const {
     question,
     questionError,
@@ -26,6 +27,7 @@ const QuestionViewContainer = ({ match }) => {
     content,
     deleteResult,
     deleteError,
+    deletedQuestion,
   } = useSelector(({ question, comment, loading }) => ({
     question: question.question,
     questionError: question.error,
@@ -38,6 +40,7 @@ const QuestionViewContainer = ({ match }) => {
     commentError: comment.error,
     deleteResult: comment.deleteResult,
     deleteError: comment.deleteError,
+    deletedQuestion: question.deletedQuestion,
   }));
   const dispatch = useDispatch();
 
@@ -83,6 +86,19 @@ const QuestionViewContainer = ({ match }) => {
     }
   };
 
+  const onDeleteQuestion = () => {
+    if (window.confirm('삭제하시겠습니까?')) {
+      const id = match.params.id;
+      dispatch(deleteQuestion({ id }));
+    }
+  };
+
+  useEffect(() => {
+    if (deletedQuestion) {
+      history.push('/board');
+    }
+  });
+
   return (
     question && (
       <QuestionView
@@ -95,6 +111,7 @@ const QuestionViewContainer = ({ match }) => {
         onWrite={onWrite}
         onDeleteComment={onDeleteComment}
         deleteResult={deleteResult}
+        onDeleteQuestion={onDeleteQuestion}
       />
     )
   );

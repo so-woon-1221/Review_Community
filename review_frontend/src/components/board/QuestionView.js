@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Viewer } from '@toast-ui/react-editor';
@@ -24,15 +24,22 @@ const QuestionHeader = styled.div`
   div {
     flex: 1;
   }
-  h1 {
+  h2 {
     margin: 0;
-  }
-  h3 {
-    margin: 5px 0;
   }
   h4 {
     margin: 10px 0;
     color: #aaaaaa;
+  }
+
+  span {
+    text-align: right;
+    h3 {
+      margin: 5px 0 20px;
+    }
+    svg:hover {
+      color: red;
+    }
   }
 `;
 
@@ -52,7 +59,7 @@ const CommentBlock = styled.div`
 `;
 
 const CommentWrapper = styled.div`
-  h5 {
+  h4 {
     margin: 0;
     display: flex;
 
@@ -97,9 +104,31 @@ const QuestionView = ({
   onWrite,
   user,
   onDeleteComment,
-  deleteResult,
+  onDeleteQuestion,
 }) => {
   const { title, createdAt, content, comment, author, category } = question;
+  const [nowCategory, setNowCategory] = useState('');
+
+  useEffect(() => {
+    switch (category) {
+      case 'tech':
+        setNowCategory('테크');
+        break;
+      case 'food':
+        setNowCategory('맛집');
+        break;
+      case 'cafe':
+        setNowCategory('카페');
+        break;
+      case 'game':
+        setNowCategory('게임');
+        break;
+      case 'fashion':
+        setNowCategory('패션');
+        break;
+      default:
+    }
+  }, [category]);
 
   const createdDate = (date) => {
     const dateSet = date.split('T');
@@ -109,10 +138,18 @@ const QuestionView = ({
     <Block>
       <QuestionHeader>
         <div>
-          <h1>{title}</h1>
+          <h2>{title}</h2>
+          <h4>#{nowCategory}</h4>
           <h4>{createdDate(createdAt)}</h4>
         </div>
-        <h3>{author.name}</h3>
+        <span>
+          <h3>{author.name}</h3>
+          {author._id === user._id ? (
+            <FontAwesomeIcon icon={faTrashAlt} onClick={onDeleteQuestion} />
+          ) : (
+            ''
+          )}
+        </span>
       </QuestionHeader>
       <ContentBlock>
         <Viewer initialValue={content} />
@@ -122,7 +159,7 @@ const QuestionView = ({
         {comment &&
           comment.map((data) => (
             <CommentWrapper key={data._id}>
-              <h5>
+              <h4>
                 {data.authorName} <i>{createdDate(data.createdAt)}</i>
                 {data.authorName === user.name ? (
                   <FontAwesomeIcon
@@ -133,7 +170,7 @@ const QuestionView = ({
                 ) : (
                   ''
                 )}
-              </h5>
+              </h4>
               <p>{data.comment}</p>
             </CommentWrapper>
           ))}
