@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import ReviewContent from '../../components/review/ReviewContent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  getReviews,
+  setValues,
+  initializeSearch,
+  initialize,
+} from '../../modules/listReview';
 
 const ContentBlock = styled.div`
   padding: 20px 15%;
@@ -149,103 +155,75 @@ const ReviewListContainer = ({ location }) => {
     },
   ];
 
-  const [nowCategory, setNowCategory] = useState('');
-  const { user } = useSelector(({ login }) => ({
-    user: login.user,
-  }));
-  const [sort, setSort] = useState('');
-  const [reviews, setReviews] = useState(null);
-  const [search, setSearch] = useState('');
-  const [author, setAuthor] = useState('');
-  const [name, setName] = useState('');
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const latest = useRef(null);
-  const recommend = useRef(null);
-  const bodyContent = useRef(null);
+  const { category, sort, search, author, page, reviews } = useSelector(
+    ({ listReview }) => ({
+      category: listReview.category,
+      sort: listReview.sort,
+      search: listReview.search,
+      author: listReview.author,
+      page: listReview.page,
+      reviews: listReview.reviews,
+    }),
+  );
 
-  const onClickSearch = () => {
-    fetch(
-      `/reviews/?category=${nowCategory}&sort=${sort}&search=${search}${author}&page=${page}`,
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result);
-        setReviews(result.reviews);
-        if (result.user) {
-          localStorage.setItem('user', result.user._id);
-        }
-      });
-  };
+  const dispatch = useDispatch();
+
+  const [name, setName] = useState('');
+  const [count, setCount] = useState(0);
+  const [user, setUser] = useState('');
 
   useEffect(() => {
-    let query = queryString.parse(location.search);
-    // console.log(query);
-    if (!query.category) {
-      query.category = 'all';
-    }
-    if (!query.sort) {
-      query.sort = 'latest';
-    }
-    if (query.author) {
-      setAuthor(`&author=${query.author}`);
-    } else {
-      setAuthor('');
-    }
-    if (!query.page) {
-      setPage(1);
-    } else {
-      setPage(query.page);
-    }
-    setNowCategory(query.category);
-    setSort(query.sort);
-
-    if (sort === 'latest') {
-      latest.current.classList.add('clicked');
-      recommend.current.classList.remove('clicked');
-    } else {
-      recommend.current.classList.add('clicked');
-      latest.current.classList.remove('clicked');
-    }
+    dispatch(getReviews({ category, sort, search, author, page }));
     const categoryLinks = document.querySelectorAll('li');
     for (let categoryLink of categoryLinks) {
-      if (categoryLink.dataset.click === nowCategory) {
+      if (categoryLink.dataset.click === category) {
         categoryLink.firstElementChild.classList.add('clicked');
       } else {
         categoryLink.firstElementChild.classList.remove('clicked');
       }
     }
-  }, [author, location.search, nowCategory, sort]);
+  }, [author, category, dispatch, page, sort]);
 
   useEffect(() => {
-    fetch(
-      `/reviews?category=${nowCategory}&sort=${sort}${author}&search=${search}&page=${page}`,
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.name) {
-          setName(result.name.name);
-        }
-        setReviews(result.reviews);
-        if (result.user) {
-          localStorage.setItem('user', result.user._id);
-        }
-        if (result.count) {
-          setCount(result.count);
-        } else {
-          setCount(0);
-        }
-      });
-    if (
-      bodyContent.current.clientHeight <= document.documentElement.clientHeight
-    ) {
-      bodyContent.current.style.minHeight =
-        document.documentElement.clientHeight - 170 + 'px';
+    if (reviews.name) {
+      setName(reviews.name);
     }
-  }, [author, nowCategory, sort, page]);
+    if (reviews.count) {
+      setCount(reviews.count);
+    }
+    if (reviews.user) {
+      setUser(reviews.user);
+    }
+  }, [reviews.count, reviews.name, reviews.user]);
+
+  useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (!query.page) {
+      dispatch(setValues({ key: 'page', value: 1 }));
+    } else {
+      dispatch(setValues({ key: 'page', value: query.page }));
+    }
+  }, [dispatch, location.search]);
+
+  useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.author) {
+      dispatch(setValues({ key: 'author', value: query.author }));
+    }
+  }, [dispatch, location.search]);
+
+  const onClickSearch = () => {
+    dispatch(getReviews({ category, sort, search, author, page }));
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(initialize());
+    };
+  }, []);
 
   return (
-    <ContentBlock ref={bodyContent}>
+    <ContentBlock>
       <CategoryBlock>
         <div>
           <h2>카테고리</h2>
@@ -259,11 +237,13 @@ const ReviewListContainer = ({ location }) => {
         </div>
         <ul>
           {categories.map((category) => (
-            // onclick 이벤트 달아서 useEffect에 category state가 바뀌면 렌더링되도록
-            // 기본 category staete는 all
             <li key={category.text} data-click={category.value}>
               <StyledLink
-                to={`/reviews?category=${category.value}&sort=${sort}${author}&search=${search}`}
+                onClick={() =>
+                  dispatch(
+                    setValues({ key: 'category', value: category.value }),
+                  )
+                }
               >
                 {category.text}
               </StyledLink>
@@ -272,18 +252,42 @@ const ReviewListContainer = ({ location }) => {
         </ul>
       </CategoryBlock>
       <SortBlock>
-        <StyledLink
-          to={`reviews?category=${nowCategory}&sort=latest${author}&search=${search}`}
-          ref={latest}
-        >
-          최신순
-        </StyledLink>
-        <StyledLink
-          to={`reviews?category=${nowCategory}&sort=recommend${author}&search=${search}`}
-          ref={recommend}
-        >
-          추천순
-        </StyledLink>
+        {sort === 'latest' ? (
+          <StyledLink
+            onClick={() =>
+              dispatch(setValues({ key: 'sort', value: 'latest' }))
+            }
+            className={'clicked'}
+          >
+            최신순
+          </StyledLink>
+        ) : (
+          <StyledLink
+            onClick={() =>
+              dispatch(setValues({ key: 'sort', value: 'latest' }))
+            }
+          >
+            최신순
+          </StyledLink>
+        )}
+        {sort === 'recommend' ? (
+          <StyledLink
+            onClick={() =>
+              dispatch(setValues({ key: 'sort', value: 'recommend' }))
+            }
+            className={'clicked'}
+          >
+            추천순
+          </StyledLink>
+        ) : (
+          <StyledLink
+            onClick={() =>
+              dispatch(setValues({ key: 'sort', value: 'recommend' }))
+            }
+          >
+            추천순
+          </StyledLink>
+        )}
         {author && (
           <AuthorWrapper>
             <b>
@@ -291,7 +295,7 @@ const ReviewListContainer = ({ location }) => {
             </b>
             {'\u00A0'}님의 글{'\u00A0'}
             <BlackLink
-              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}`}
+              onClick={() => dispatch(setValues({ key: 'author', value: '' }))}
             >
               <FontAwesomeIcon icon={faTimesCircle} />
             </BlackLink>
@@ -304,44 +308,36 @@ const ReviewListContainer = ({ location }) => {
             type={'text'}
             placeholder={'검색'}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>
+              dispatch(setValues({ key: 'search', value: e.target.value }))
+            }
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 onClickSearch();
               }
             }}
-            onClick={(e) => (e.target.value = '')}
+            onClick={() => dispatch(initializeSearch())}
           />
           <FontAwesomeIcon icon={faSearch} onClick={onClickSearch} />
         </SearchWrapper>
       </SearchBlock>
       {reviews &&
-        (reviews === '검색 결과 없음' ? (
+        (reviews.reviews === '검색 결과 없음' ? (
           <AuthorWrapper>검색결과 없음</AuthorWrapper>
         ) : (
-          reviews.map((review) => (
+          reviews.reviews.map((review) => (
             <ReviewContent key={review._id} review={review} />
           ))
         ))}
       {count > 1 && (
         <PageBlock>
           {page > 1 && (
-            <StyledLink
-              className={'clicked'}
-              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
-                +page - 1
-              }${author}`}
-            >
+            <StyledLink className={'clicked'} to={`/reviews?page=${+page - 1}`}>
               이전
             </StyledLink>
           )}
           {page < Math.ceil(count / 10) && (
-            <StyledLink
-              className={'clicked'}
-              to={`reviews?category=${nowCategory}&sort=${sort}&search=${search}&page=${
-                +page + 1
-              }${author}`}
-            >
+            <StyledLink className={'clicked'} to={`/reviews?page=${+page + 1}`}>
               다음
             </StyledLink>
           )}

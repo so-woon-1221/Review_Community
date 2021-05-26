@@ -37,7 +37,8 @@ router.get('/', async (req, res, next) => {
     }
     if (author) {
       filter.author = author;
-      name = await User.findOne({ _id: author });
+      const tempUser = await User.findOne({ _id: author });
+      name = tempUser.name;
     }
     const count = await Review.find(filter).count();
     if (count > 0) {

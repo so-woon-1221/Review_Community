@@ -7,6 +7,7 @@ import board, { boardSaga } from './board';
 import question, { questionSaga } from './question';
 import comment, { commentSaga } from './comment';
 import hotReview, { hotReviewSaga } from './hotReview';
+import listReview, { listReviewSaga } from './listReview';
 import { all } from 'redux-saga/effects';
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   question,
   comment,
   hotReview,
+  listReview,
 });
 export function* rootSaga() {
   yield all([
@@ -28,6 +30,7 @@ export function* rootSaga() {
     questionSaga(),
     commentSaga(),
     hotReviewSaga(),
+    listReviewSaga(),
   ]);
 }
 

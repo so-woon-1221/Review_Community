@@ -103,7 +103,14 @@ const StyledLink = styled(Link)`
   color: white;
 `;
 
-const Review = ({ review, onClickUp, onClickDown, user, onDelete }) => {
+const Review = ({
+  review,
+  onClickUp,
+  onClickDown,
+  user,
+  onDelete,
+  onClickAuthor,
+}) => {
   const {
     title,
     subtitle,
