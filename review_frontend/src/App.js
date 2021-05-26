@@ -16,6 +16,7 @@ const App = () => {
   return (
     <>
       <Route path={'/'} component={IndexPage} exact={true} />
+      {/*<Route path={'/index'} component={IndexPage} exact={true} />*/}
       <Route path={'/reviews'} component={ReviewListPage} exact={true} />
       <Route path={'/reviews/:id'} component={ReviewPage} />
       <Route path={'/board'} component={BoardPage} exact={true} />

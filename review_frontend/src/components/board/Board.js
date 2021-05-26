@@ -31,6 +31,10 @@ const StyledLink = styled(Link)`
     color: #a7c0f2;
   }
 
+  &:last-child {
+    margin-right: 0;
+  }
+
   @media screen and (max-width: 768px) {
     margin-right: 0;
   }

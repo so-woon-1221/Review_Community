@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 
 const ContentWrapper = styled(Link)`
   box-sizing: border-box;
@@ -40,7 +42,6 @@ const ContentImage = styled.div`
 `;
 
 const ContentDescription = styled.div`
-  //width: 60%;
   padding-left: 20px;
 
   h2 {
@@ -56,6 +57,10 @@ const ContentDescription = styled.div`
     margin: 0 0 10px;
   }
 
+  svg {
+    margin-left: 5px;
+    color: #a7c0f2;
+  }
   span {
     margin: 0 0 10px;
     background: #171c26;
@@ -100,11 +105,12 @@ const ReviewContent = ({ review }) => {
   }, [review.category, review.thumbnail]);
   return (
     <ContentWrapper key={review._id} to={`/reviews/${review._id}`}>
-      <ContentImage ref={thumbnail}>
-        {/*<img src={review.thumbnail} alt={review.title} />*/}
-      </ContentImage>
+      <ContentImage ref={thumbnail} />
       <ContentDescription>
-        <h2>{review.title}</h2>
+        <h2>
+          {review.title} [{review.recommend}
+          <FontAwesomeIcon icon={faArrowCircleUp} />]
+        </h2>
         <h3>{review.subtitle}</h3>
         <h5>
           by <i>{review.author.name}</i>

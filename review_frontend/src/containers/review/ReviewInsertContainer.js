@@ -44,9 +44,9 @@ const ReviewInsertContainer = ({ history }) => {
     if (content === '') {
       errorMessage += '[본문] ';
     }
-    if (thumbnail === '') {
-      errorMessage += '[썸네일] ';
-    }
+    // if (thumbnail === '') {
+    //   errorMessage += '[썸네일] ';
+    // }
     if (category === '') {
       errorMessage += '[카테고리] ';
     }
@@ -70,7 +70,7 @@ const ReviewInsertContainer = ({ history }) => {
     if (review.title === title && title !== '') {
       alert('등록되었습니다.');
       dispatch(initialize());
-      history.push('/');
+      history.push('/reviews');
     }
     if (review.message) {
       alert(review.message);
@@ -78,7 +78,7 @@ const ReviewInsertContainer = ({ history }) => {
     if (error) {
       alert(error);
     }
-  }, [dispatch, history, review, title]);
+  }, [dispatch, error, history, review, title]);
 
   return (
     <ReviewInsert
