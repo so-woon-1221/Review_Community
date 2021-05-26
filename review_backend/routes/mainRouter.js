@@ -18,25 +18,25 @@ router.get('/index', async (req, res, next) => {
     const year = today.getFullYear();
     const month = today.getMonth();
     const date = today.getDate();
-    filter.createdAt = { $gte: new Date(year, month, date, 0, 0) };
+    filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === '3day') {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
     const date = today.getDate() - 3;
-    filter.createdAt = { $gte: new Date(year, month, date, 0, 0) };
+    filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === 'week') {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
     const date = today.getDate() - 7;
-    filter.createdAt = { $gte: new Date(year, month, date, 0, 0) };
+    filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === 'month') {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() - 1;
     const date = today.getDate();
-    filter.createdAt = { $gte: new Date(year, month, date, 0, 0) };
+    filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   }
   try {
     reviews = await Review.find(filter)

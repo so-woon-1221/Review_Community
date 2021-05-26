@@ -159,6 +159,7 @@ const Board = ({
   onSearch,
   reset,
   location,
+  user,
 }) => {
   const categories = [
     {
@@ -205,9 +206,11 @@ const Board = ({
       <CategoryBlock>
         <div>
           <h2>카테고리</h2>
-          <StyledLink className={'clicked'} to={'/board/question'}>
-            <b>질문하기</b>
-          </StyledLink>
+          {user && (
+            <StyledLink className={'clicked'} to={'/board/question'}>
+              <b>질문하기</b>
+            </StyledLink>
+          )}
         </div>
         <ul>
           {categories.map((category) => (

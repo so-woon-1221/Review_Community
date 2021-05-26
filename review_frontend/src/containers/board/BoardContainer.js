@@ -78,6 +78,7 @@ const BoardContainer = ({ location }) => {
       search={search}
       onSearch={onSearch}
       reset={reset}
+      user={boards.user}
     />
   ) : (
     <MessageBlock>로딩중입니다.</MessageBlock>

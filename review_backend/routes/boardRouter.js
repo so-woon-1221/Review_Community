@@ -5,6 +5,20 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
+function getCurrentDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const today = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+  return new Date(
+    Date.UTC(year, month, today, hours, minutes, seconds, milliseconds),
+  );
+}
+
 router.get('/', async (req, res, next) => {
   let { category, sort, search, limit } = req.query;
   let filter = {};
@@ -28,12 +42,18 @@ router.get('/', async (req, res, next) => {
   }
   try {
     const count = await Board.find(filter).count();
+    const token = req.cookies['access_token'];
+    let user = '';
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      user = await User.findOne({ email: decoded.email });
+    }
     if (count > 0) {
       const board = await Board.find(filter)
         .sort(sorted)
         .populate('author')
         .limit(+limit);
-      return res.send({ count, board });
+      return res.send({ count, board, user });
     }
     return res.send({ count });
   } catch (e) {
@@ -58,6 +78,7 @@ router.post('/question', async (req, res, next) => {
         category,
         thumbnail,
         author: user._id,
+        createdAt: getCurrentDate(),
       })
     ).populate('author');
     res.send(question);

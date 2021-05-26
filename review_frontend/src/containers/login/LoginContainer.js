@@ -33,8 +33,7 @@ const LoginContainer = ({ history }) => {
       return;
     }
     if (user) {
-      alert('로그인되었습니다.');
-      history.goBack();
+      history.push('/');
       try {
         // localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('user', user._id);
