@@ -4,6 +4,7 @@ const User = require('../schemas/user');
 const Comment = require('../schemas/comment');
 const Board = require('../schemas/board');
 const { isLoggedIn } = require('../routes/jwtMiddleware');
+const getCurrentTime = require('../public/getCurrentTime');
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       comment: content,
       author: user._id,
       authorName: user.name,
+      createdAt: getCurrentTime(),
     });
     res.send(newComment);
   } catch (e) {

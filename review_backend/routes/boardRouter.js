@@ -1,23 +1,11 @@
 const express = require('express');
 const Board = require('../schemas/board');
 const User = require('../schemas/user');
+const Comment = require('../schemas/comment');
 const jwt = require('jsonwebtoken');
+const getCurrentTime = require('../public/getCurrentTime');
 
 const router = express.Router();
-
-function getCurrentDate() {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const today = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  const milliseconds = date.getMilliseconds();
-  return new Date(
-    Date.UTC(year, month, today, hours, minutes, seconds, milliseconds),
-  );
-}
 
 router.get('/', async (req, res, next) => {
   let { category, sort, search, limit } = req.query;
@@ -78,7 +66,7 @@ router.post('/question', async (req, res, next) => {
         category,
         thumbnail,
         author: user._id,
-        createdAt: getCurrentDate(),
+        createdAt: getCurrentTime(),
       })
     ).populate('author');
     res.send(question);
@@ -111,6 +99,10 @@ router.delete('/question/:id', async (req, res, next) => {
   const id = req.params.id;
   try {
     const result = await Board.findOneAndDelete({ _id: id });
+    const comments = result.comment;
+    for (let comment of comments) {
+      await Comment.findOneAndDelete({ _id: comment });
+    }
     res.send(result);
   } catch (e) {
     console.error(e);
