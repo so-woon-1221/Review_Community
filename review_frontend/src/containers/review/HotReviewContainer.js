@@ -85,7 +85,11 @@ const HotReviewContainer = () => {
       </div>
       {reviews &&
         reviews.reviews.map((review) => (
-          <ReviewContent review={review} key={review._id} />
+          <ReviewContent
+            review={review}
+            key={review._id}
+            recommend={review.recommend}
+          />
         ))}
     </ContentBlock>
   );

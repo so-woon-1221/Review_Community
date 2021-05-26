@@ -39,6 +39,20 @@ router.post('/image', upload.single('image'), (req, res, next) => {
   }
 });
 
+function getCurrentDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const today = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+  return new Date(
+    Date.UTC(year, month, today, hours, minutes, seconds, milliseconds),
+  );
+}
+
 router.post('/', isLoggedIn, async (req, res, next) => {
   try {
     const review = await Review.create({
@@ -48,6 +62,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       thumbnail: req.body.thumbnail,
       category: req.body.category,
       author: req.body.author,
+      createdAt: getCurrentDate(),
     });
     res.send(review);
   } catch (e) {

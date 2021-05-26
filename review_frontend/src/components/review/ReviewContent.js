@@ -45,11 +45,11 @@ const ContentDescription = styled.div`
   padding-left: 20px;
 
   h2 {
-    margin: 0 0 10px;
+    margin: 0;
   }
 
   h3 {
-    margin: 0 0 10px;
+    margin: 10px 0 10px;
     color: #262626;
   }
 
@@ -78,7 +78,7 @@ const ContentDescription = styled.div`
   }
 `;
 
-const ReviewContent = ({ review }) => {
+const ReviewContent = ({ review, recommend }) => {
   const [category, setCategory] = useState('');
   const thumbnail = useRef(null);
   useEffect(() => {
@@ -107,10 +107,14 @@ const ReviewContent = ({ review }) => {
     <ContentWrapper key={review._id} to={`/reviews/${review._id}`}>
       <ContentImage ref={thumbnail} />
       <ContentDescription>
-        <h2>
-          {review.title} [{review.recommend}
-          <FontAwesomeIcon icon={faArrowCircleUp} />]
-        </h2>
+        {recommend !== undefined ? (
+          <h2>
+            {review.title} [{review.recommend}
+            <FontAwesomeIcon icon={faArrowCircleUp} />]
+          </h2>
+        ) : (
+          <h2>{review.title}</h2>
+        )}
         <h3>{review.subtitle}</h3>
         <h5>
           by <i>{review.author.name}</i>
