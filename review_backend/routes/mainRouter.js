@@ -8,34 +8,31 @@ const router = express.Router();
 
 router.get('/index', async (req, res, next) => {
   let reviews = '';
+  const today = new Date();
   let { limit, term } = req.query;
   let filter = {};
   if (!limit) {
     limit = 10;
   }
   if (term === 'today') {
-    const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
-    const date = today.getDate();
+    const date = today.getDate() + 1;
     filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === '3day') {
-    const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
-    const date = today.getDate() - 3;
+    const date = today.getDate() - 2;
     filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === 'week') {
-    const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth();
-    const date = today.getDate() - 7;
+    const date = today.getDate() - 6;
     filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   } else if (term === 'month') {
-    const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() - 1;
-    const date = today.getDate();
+    const date = today.getDate() + 1;
     filter.createdAt = { $gte: new Date(year, month, date, -15, 0, 0, 0) };
   }
   try {

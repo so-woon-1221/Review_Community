@@ -6,6 +6,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const passport = require('passport');
+const cors = require('cors');
 // const helmet = require('helmet');
 // const hpp = require('hpp');
 // const redis = require('redis');
@@ -59,15 +60,16 @@ app.use(
     // store: new RedisStore({ client: redisClient }),
   }),
 );
-app.use('/img', express.static(path.join(__dirname, 'uploads')));
+app.use(cors());
+app.use('/api/img', express.static(path.join(__dirname, 'uploads')));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/', mainRouter);
-app.use('/auth', authRouter);
-app.use('/reviews', reviewsRouter);
-app.use('/board', boardRouter);
-app.use('/review', reviewRouter);
-app.use('/comment', commentRouter);
+app.use('/api', mainRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/board', boardRouter);
+app.use('/api/review', reviewRouter);
+app.use('/api/comment', commentRouter);
 // app.use(favicon(path.join(__dirname, 'public', 'icon.ico')));
 
 connect();
