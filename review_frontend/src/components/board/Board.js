@@ -295,7 +295,7 @@ const Board = ({
                 <h2>
                   {board.title} ({board.comment.length})
                 </h2>
-                <h5>by {board.author.name}</h5>
+                {board.author.name && <h5>by {board.author.name}</h5>}
                 <h5>at {createDate(board.createdAt)}</h5>
               </BoardContent>
             </BoardWrapper>

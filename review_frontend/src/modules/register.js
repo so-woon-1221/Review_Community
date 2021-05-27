@@ -30,15 +30,15 @@ export const checkEmail = createAction(CHECK_EMAIL, ({ email }) => ({ email }));
 export const checkName = createAction(CHECK_NAME, ({ name }) => ({ name }));
 
 export const registerUserApi = ({ email, name, password }) =>
-  axios.post('/auth/join', { email, name, password });
+  axios.post('/api/auth/join', { email, name, password });
 const registerUserSaga = createRequestSaga(REGISTER, registerUserApi);
 
 export const checkEmailApi = ({ email }) =>
-  axios.post('/auth/join/check/email', { email });
+  axios.post('/api/auth/join/check/email', { email });
 const checkEmailSaga = createRequestSaga(CHECK_EMAIL, checkEmailApi);
 
 export const checkNameApi = ({ name }) =>
-  axios.post('/auth/join/check/name', { name });
+  axios.post('/api/auth/join/check/name', { name });
 const checkNameSaga = createRequestSaga(CHECK_NAME, checkNameApi);
 
 export function* registerSaga() {

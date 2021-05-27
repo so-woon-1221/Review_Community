@@ -20,7 +20,7 @@ export const getHotReview = createAction(GET_HOT_REVIEW, ({ limit, term }) => ({
 export const initialize = createAction(INITIALIZE);
 
 const getHotReviewApi = ({ limit, term }) =>
-  axios.get(`/index?limit=${limit}&term=${term}`);
+  axios.get(`/api/index?limit=${limit}&term=${term}`);
 const getHotReviewSaga = createRequestSaga(GET_HOT_REVIEW, getHotReviewApi);
 
 export function* hotReviewSaga() {

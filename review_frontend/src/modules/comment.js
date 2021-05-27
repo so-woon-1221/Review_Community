@@ -22,10 +22,11 @@ export const writeComment = createAction(WRITE_COMMENT, ({ content }) => ({
 }));
 export const deleteComment = createAction(DELETE_COMMENT, ({ id }) => ({ id }));
 
-const writeCommentApi = ({ content }) => axios.post('/comment', { content });
+const writeCommentApi = ({ content }) =>
+  axios.post('/api/comment', { content });
 const writeCommentSaga = createRequestSaga(WRITE_COMMENT, writeCommentApi);
 
-const deleteCommentApi = ({ id }) => axios.delete(`/comment/${id}`);
+const deleteCommentApi = ({ id }) => axios.delete(`/api/comment/${id}`);
 const deleteCommentSaga = createRequestSaga(DELETE_COMMENT, deleteCommentApi);
 
 export function* commentSaga() {

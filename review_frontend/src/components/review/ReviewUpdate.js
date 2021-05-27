@@ -117,19 +117,6 @@ const ReviewUpdate = ({ review, onSubmit }) => {
     setContent(getContent);
   }, []);
 
-  const encodeBase64ImageFile = (image) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = (event) => {
-        resolve(event.target.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
   const onChangeThumbnail = async (e) => {
     const result = await sendImage(e.target.files[0]);
     setThumbnail(result);
@@ -137,11 +124,9 @@ const ReviewUpdate = ({ review, onSubmit }) => {
   };
 
   const sendImage = async (img) => {
-    // const resize = await resizeImage(img);
-    // console.log(resize);
     const formData = new FormData();
     formData.append('image', img);
-    const result = await axios.post('/review/image', formData, {
+    const result = await axios.post('/api/review/image', formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
 

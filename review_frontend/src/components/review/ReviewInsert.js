@@ -156,7 +156,7 @@ const ReviewInsert = ({
   const sendImage = async (img) => {
     const formData = new FormData();
     formData.append('image', img);
-    const result = await axios.post('/review/image', formData, {
+    const result = await axios.post('/api/review/image', formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
 

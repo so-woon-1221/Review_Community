@@ -37,7 +37,7 @@ const insertReview = ({
   category,
   author,
 }) =>
-  axios.post('/review', {
+  axios.post('/api/review', {
     title,
     subtitle,
     content,
@@ -47,7 +47,7 @@ const insertReview = ({
   });
 const insertSaga = createRequestSaga(INSERT, insertReview);
 
-const getReview = ({ id }) => axios.get(`/reviews/${id}`);
+const getReview = ({ id }) => axios.get(`/api/reviews/${id}`);
 const getReviewSaga = createRequestSaga(GET, getReview);
 
 export function* reviewSaga() {

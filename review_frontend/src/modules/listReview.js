@@ -29,7 +29,7 @@ export const initialize = createAction(INITIALIZE);
 
 const getReviewsApi = ({ category, sort, search, author, page }) =>
   axios.get(
-    `/reviews?category=${category}&sort=${sort}&search=${search}&author=${author}&page=${page}`,
+    `/api/reviews?category=${category}&sort=${sort}&search=${search}&author=${author}&page=${page}`,
   );
 const getReviewsSaga = createRequestSaga(GET_REVIEWS, getReviewsApi);
 

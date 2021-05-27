@@ -49,7 +49,7 @@ export const postComment = createAction(POST_COMMENT, ({ id, commentId }) => ({
 export const resetComment = createAction(RESET_COMMENT);
 
 const postQuestionApi = ({ title, content, category, thumbnail }) =>
-  axios.post('/board/question', {
+  axios.post('/api/board/question', {
     title,
     content,
     category,
@@ -57,17 +57,17 @@ const postQuestionApi = ({ title, content, category, thumbnail }) =>
   });
 const postQuestionSaga = createRequestSaga(POST_QUESTION, postQuestionApi);
 
-const getQuestionApi = ({ id }) => axios.get(`/board/question/${id}`);
+const getQuestionApi = ({ id }) => axios.get(`/api/board/question/${id}`);
 const getQuestionSaga = createRequestSaga(GET_QUESTION, getQuestionApi);
 
-const deleteQuestionApi = ({ id }) => axios.delete(`/board/question/${id}`);
+const deleteQuestionApi = ({ id }) => axios.delete(`/api/board/question/${id}`);
 const deleteQuestionSaga = createRequestSaga(
   DELETE_QUESTION,
   deleteQuestionApi,
 );
 
 const postCommentApi = ({ id, commentId }) =>
-  axios.patch(`/board/question/${id}/comment`, { commentId });
+  axios.patch(`/api/board/question/${id}/comment`, { commentId });
 const postCommentSaga = createRequestSaga(POST_COMMENT, postCommentApi);
 
 export function* questionSaga() {

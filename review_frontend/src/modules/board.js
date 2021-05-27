@@ -28,7 +28,7 @@ export const getBoard = createAction(
 
 const getBoardApi = ({ category, sort, search, limit }) =>
   axios.get(
-    `/board?category=${category}&sort=${sort}&search=${search}&limit=${limit}`,
+    `/api/board?category=${category}&sort=${sort}&search=${search}&limit=${limit}`,
   );
 const getBoardSaga = createRequestSaga(GET_BOARD, getBoardApi);
 

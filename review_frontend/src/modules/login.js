@@ -27,10 +27,10 @@ export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
 export const clearUser = createAction(CLEAR_USER);
 
 const loginUserApi = ({ email, password }) =>
-  axios.post('/auth/login', { email, password });
+  axios.post('/api/auth/login', { email, password });
 const loginUserSaga = createRequestSaga(LOGIN, loginUserApi);
 
-const logoutUserApi = () => axios.get('/auth/logout');
+const logoutUserApi = () => axios.get('/api/auth/logout');
 const logoutUserSaga = createRequestSaga(LOGOUT, logoutUserApi);
 
 export function* loginSaga() {

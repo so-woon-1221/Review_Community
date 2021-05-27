@@ -9,7 +9,7 @@ const ReviewUpdateContainer = ({ match, history }) => {
 
   useEffect(() => {
     const getReviews = async () => {
-      const result = await axios.get(`/review/${id}`);
+      const result = await axios.get(`/api/review/${id}`);
       setReview(result.data);
     };
     getReviews();
@@ -17,7 +17,7 @@ const ReviewUpdateContainer = ({ match, history }) => {
 
   const onSubmit = async (title, subtitle, content, thumbnail, category) => {
     try {
-      const result = await axios.patch(`/review/${id}`, {
+      const result = await axios.patch(`/api/review/${id}`, {
         title,
         subtitle,
         content,
