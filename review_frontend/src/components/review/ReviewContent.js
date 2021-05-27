@@ -14,10 +14,6 @@ const ContentWrapper = styled(Link)`
   border-bottom: 1px solid #dddddd;
   text-decoration: none;
   color: black;
-  &:last-child {
-    border-bottom: none;
-    padding: 10px 10px 0 0;
-  }
   @media screen and (max-width: 768px) {
     padding: 10px 0;
   }

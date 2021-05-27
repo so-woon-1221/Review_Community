@@ -2,57 +2,82 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
 const RegisterBlock = styled.div`
-  padding: 20px 15%;
+  padding: 100px 15%;
+  text-align: center;
 
   @media screen and (max-width: 768px) {
-    padding: 20px 5%;
+    padding: 80px 5%;
+  }
+
+  font-size: 16px;
+  button {
+    font-size: 16px;
+  }
+  input {
+    font-size: 16px;
   }
 `;
 
 const RegisterWrapper = styled.div`
-  text-align: center;
-  font-size: 20px;
-  padding-top: 70px;
-  label {
-    text-align: left;
-    display: inline-block;
-    width: 100px;
-    margin: 0 auto;
-  }
+  width: 100%;
+`;
 
+const InputBlock = styled.div`
+  text-align: left;
+  width: 70%;
+  display: flex;
+  padding: 0 15%;
+  align-items: center;
   input {
+    flex: 1;
+    height: 40px;
     border: none;
-    width: 300px;
     border-bottom: 1px solid #dddddd;
-    font-size: 20px;
   }
-
+  label {
+    margin-right: 5%;
+    width: 20%;
+  }
   button {
+    margin-left: 5%;
+    width: 15%;
+    height: 40px;
     border: none;
-    background: #171c26;
-    color: #a7c0f2;
-    padding: 15px;
-    width: 400px;
-    margin: 0 auto 20px;
-    display: block;
     border-radius: 5px;
-    font-size: 20px;
+    background: black;
+    color: #a7c0f2;
     cursor: pointer;
-    &:hover {
-      background: #a7c0f2;
-      color: black;
-    }
+  }
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 0;
   }
 `;
 
 const MessageBlock = styled.div`
   height: 70px;
-  padding-top: 20px;
+  padding: 20px 0;
   box-sizing: border-box;
-  width: 400px;
   text-align: left;
-  padding-left: 100px;
-  margin: auto;
+  margin-left: 32.5%;
+`;
+
+const RegisterButton = styled.button`
+  background: black;
+  color: #a7c0f2;
+  border: none;
+  border-radius: 5px;
+  width: 70%;
+  padding: 20px 10px;
+  cursor: pointer;
+  &:hover {
+    background: #a7c0f2;
+    color: black;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Register = ({
@@ -68,10 +93,29 @@ const Register = ({
 }) => {
   const [check, setCheck] = useState('');
   const checkDiv = useRef(null);
+  const [emailMessage, setEmailMessage] = useState('');
+  const [nameMessage, setNameMessage] = useState('');
   const onChangeEmail = (e) => {
     const email = e.target.value;
     onChange({ key: 'email', value: email });
+    if (email.indexOf('@') < 0 || email.indexOf('.com') < 0) {
+      setEmailMessage('올바른 이메일 형식을 입력하세요');
+    } else {
+      setEmailMessage('');
+    }
     onCheckEmail({ email });
+  };
+
+  const onClickCheckEmail = () => {
+    if (email === '') {
+      alert('이메일을 입력하세요');
+      return;
+    }
+    if (email.indexOf('@') < 0 || email.indexOf('.com') < 0) {
+      alert('올바른 이메일 형식을 입력하세요');
+      return;
+    }
+    alert(checkEmail);
   };
 
   const onChangePassword = (e) => {
@@ -82,7 +126,16 @@ const Register = ({
   const onChangeName = (e) => {
     const name = e.target.value;
     onChange({ key: 'name', value: name });
+    if (name.length <= 1) {
+      setNameMessage('닉네임은 최소 2글자입니다.');
+    } else {
+      setNameMessage('');
+    }
     onCheckName({ name });
+  };
+
+  const onClickCheckName = () => {
+    alert(checkName);
   };
 
   const passwordCheck = (e) => {
@@ -97,17 +150,20 @@ const Register = ({
   return (
     <RegisterBlock>
       <RegisterWrapper>
-        <div>
-          <label for={'email'}>이메일</label>
+        <InputBlock>
+          <label htmlFor={'email'}>이메일</label>
           <input
             type={'text'}
             value={email}
             onChange={onChangeEmail}
             id={'email'}
           />
-          <MessageBlock>{checkEmail}</MessageBlock>
-        </div>
-        <div>
+          <button onClick={onClickCheckEmail}>확인</button>
+        </InputBlock>
+        <MessageBlock>{emailMessage}</MessageBlock>
+      </RegisterWrapper>
+      <RegisterWrapper>
+        <InputBlock>
           <label htmlFor={'password'}>비밀번호</label>
           <input
             type={'password'}
@@ -115,29 +171,36 @@ const Register = ({
             onChange={onChangePassword}
             id={'password'}
           />
-          <MessageBlock />
-        </div>
-        <div>
-          <label htmlFor={'password_check'}>재입력</label>
+        </InputBlock>
+        <MessageBlock />
+      </RegisterWrapper>
+      <RegisterWrapper>
+        <InputBlock>
+          <label htmlFor={'password_check'}>비밀번호 확인</label>
           <input
             type={'password'}
             onChange={passwordCheck}
             id={'password_check'}
+            // placeholder={'비밀번호 확인'}
           />
-          <MessageBlock ref={checkDiv}>{check}</MessageBlock>
-        </div>
-        <div>
+        </InputBlock>
+        <MessageBlock ref={checkDiv}>{check}</MessageBlock>
+      </RegisterWrapper>
+      <RegisterWrapper>
+        <InputBlock>
           <label htmlFor={'nick'}>닉네임</label>
           <input
             type={'text'}
             value={name}
             onChange={onChangeName}
             id={'nick'}
+            // placeholder={'닉네임'}
           />
-          <MessageBlock>{checkName}</MessageBlock>
-        </div>
-        <button onClick={onSubmit}>회원가입</button>
+          <button onClick={onClickCheckName}>확인</button>
+        </InputBlock>
+        <MessageBlock>{nameMessage}</MessageBlock>
       </RegisterWrapper>
+      <RegisterButton onClick={onSubmit}>회원가입</RegisterButton>
     </RegisterBlock>
   );
 };

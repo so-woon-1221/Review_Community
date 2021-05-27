@@ -3,64 +3,83 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const LoginBlock = styled.div`
-  padding: 20px 15%;
+  padding: 100px 15%;
+  text-align: center;
 
   @media screen and (max-width: 768px) {
-    padding: 20px 5%;
+    padding: 80px 5%;
   }
 `;
 
 const LoginWrapper = styled.div`
-  text-align: center;
-  font-size: 20px;
-  label {
+  width: 100%;
+  font-size: 16px;
+  div {
     text-align: left;
-    display: inline-block;
-    width: 100px;
-    margin: 0 auto;
+    width: 70%;
+    padding: 0 15%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 70px;
   }
-
   input {
+    flex: 1;
+    height: 40px;
     border: none;
-    width: 300px;
     border-bottom: 1px solid #dddddd;
-    font-size: 20px;
-    margin-top: 70px;
+  }
+  label {
+    margin-right: 5%;
+    width: 20%;
   }
 
-  button {
-    border: none;
-    background: #171c26;
-    color: #a7c0f2;
-    padding: 15px;
-    width: 400px;
-    margin: 70px auto 20px;
-    display: block;
-    border-radius: 5px;
-    font-size: 20px;
-    cursor: pointer;
-    &:hover {
-      background: #a7c0f2;
-      color: black;
+  @media screen and (max-width: 768px) {
+    div {
+      width: 100%;
+      padding: 0;
     }
   }
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  font-size: 20px;
   border: none;
   background: #171c26;
   color: #a7c0f2;
-  padding: 15px 0;
-  width: 400px;
-  margin: 0 auto 30px;
+  padding: 20px 0;
+  width: 70%;
   display: block;
+  margin: 0 15%;
   border-radius: 5px;
   cursor: pointer;
   &:hover {
     background: #a7c0f2;
     color: black;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+  }
+`;
+
+const LoginButton = styled.button`
+  background: black;
+  color: #a7c0f2;
+  border: none;
+  border-radius: 5px;
+  width: 70%;
+  padding: 20px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 40px;
+  &:hover {
+    background: #a7c0f2;
+    color: black;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -94,9 +113,9 @@ const Login = ({ email, password, onChangeField, onSubmit }) => {
             onChange={onChangePassword}
           />
         </div>
-        <button onClick={onSubmit}>로그인</button>
-        <StyledLink to={'/register'}>회원가입</StyledLink>
       </LoginWrapper>
+      <LoginButton onClick={onSubmit}>로그인</LoginButton>
+      <StyledLink to={'/register'}>회원가입</StyledLink>
     </LoginBlock>
   );
 };
